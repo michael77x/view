@@ -1,0 +1,52 @@
+(function () {
+  var DOCS = [
+    { title: "Intercambiadores de calor — Catalogo general", brand: "ALFA LAVAL", type: "brochure", line: "heat" },
+    { title: "Guia de seleccion de PHE", brand: "ALFA LAVAL", type: "brochure", line: "heat" },
+    { title: "Manual de instalacion y mantenimiento PHE", brand: "ALFA LAVAL", type: "manual", line: "heat" },
+    { title: "Bombas centrifugas — Catalogo", brand: "GRUNDFOS", type: "brochure", line: "pumps" },
+    { title: "Bombas dosificadoras — Linea SMART Digital", brand: "GRUNDFOS", type: "brochure", line: "pumps" },
+    { title: "Manual de operacion y mantenimiento CR/CRN", brand: "GRUNDFOS", type: "manual", line: "pumps" },
+    { title: "Valvulas de seguridad — Catalogo", brand: "KUNKLE", type: "brochure", line: "valves" },
+    { title: "Valvulas de control — Catalogo industrial", brand: "SCHUBERT & SALZER", type: "brochure", line: "valves" },
+    { title: "Manual tecnico valvulas de seguridad", brand: "KUNKLE", type: "manual", line: "valves" },
+    { title: "Empaquetaduras y juntas — Catalogo general", brand: "TEADIT", type: "brochure", line: "sealing" },
+    { title: "Compatibilidad quimica de materiales", brand: "TEADIT", type: "manual", line: "sealing" },
+    { title: "Guia de apriete y montaje de juntas", brand: "TEADIT", type: "manual", line: "sealing" },
+  ];
+
+  var activeFilter = "all";
+
+  function render() {
+    var el = document.getElementById("brochure-list");
+    if (!el) return;
+    var filtered = activeFilter === "all" ? DOCS : DOCS.filter(function (d) { return d.type === activeFilter; });
+
+    el.innerHTML = filtered.map(function (doc) {
+      var icon = doc.type === "brochure" ? "📄" : "📘";
+      var typeLabel = doc.type === "brochure" ? "Brochure" : "Manual";
+      return '<div class="brochure-card">' +
+        '<div class="brochure-card-icon">' + icon + '</div>' +
+        '<div class="brochure-card-body">' +
+        '<strong>' + doc.title + '</strong>' +
+        '<span class="tag">' + doc.brand + '</span>' +
+        '<span class="brochure-type">' + typeLabel + '</span>' +
+        '</div>' +
+        '</div>';
+    }).join("");
+  }
+
+  function init() {
+    document.querySelectorAll("[data-brochure-filter]").forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        activeFilter = tab.dataset.brochureFilter;
+        document.querySelectorAll("[data-brochure-filter]").forEach(function (t) {
+          t.classList.toggle("is-active", t === tab);
+        });
+        render();
+      });
+    });
+    render();
+  }
+
+  window.HiviAppBrochures = { init: init };
+})();

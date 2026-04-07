@@ -1,0 +1,50 @@
+window.HiviAppTemplates.screens.expertConsult = `
+  <section class="screen tool-detail-screen" id="screen-expert-consult">
+    <div class="screen-head compact">
+      <p class="eyebrow">Soporte</p>
+      <h2>Consulta al experto</h2>
+      <p class="muted">Canaliza dudas tecnicas para revision del equipo especialista.</p>
+    </div>
+
+    <form class="stack-form" id="expert-form">
+      <div class="form-block">
+        <strong class="form-block-title">Describe tu consulta</strong>
+
+        <label>
+          <span>Linea o equipo</span>
+          <select id="expert-line">
+            <option value="heat">Intercambiadores de calor</option>
+            <option value="pumps">Bombas centrifugas</option>
+            <option value="valves">Valvulas y seguridad</option>
+            <option value="sealing">Sellado y empaquetaduras</option>
+            <option value="air">Aire comprimido</option>
+            <option value="other">Otro</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Tipo de consulta</span>
+          <select id="expert-type">
+            <option value="technical">Duda tecnica</option>
+            <option value="selection">Seleccion de equipo</option>
+            <option value="failure">Falla o problema</option>
+            <option value="maintenance">Mantenimiento</option>
+            <option value="other">Otro</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Descripcion</span>
+          <textarea rows="4" id="expert-description" placeholder="Describe tu duda o problema con el mayor detalle posible..."></textarea>
+        </label>
+      </div>
+
+      <div class="note-box">
+        <strong>Respuesta</strong>
+        <p>Tu consulta sera derivada al especialista correspondiente. Recibiras respuesta por correo o dentro de la app.</p>
+      </div>
+
+      <button type="submit" class="primary-btn full-btn">Enviar consulta</button>
+    </form>
+  </section>
+`;

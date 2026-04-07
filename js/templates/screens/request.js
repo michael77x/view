@@ -1,0 +1,79 @@
+window.HiviAppTemplates.screens.request = `
+  <section class="screen request-screen" id="screen-request">
+    <div class="screen-head compact">
+      <p class="eyebrow">Solicitud guiada</p>
+      <h2 id="request-title">Formulario tecnico</h2>
+      <p class="muted">Completa los datos para registrar tu requerimiento.</p>
+    </div>
+
+    <div class="request-steps">
+      <span class="request-step is-active">Linea</span>
+      <span class="request-step is-active">Datos</span>
+      <span class="request-step">Envio</span>
+    </div>
+
+    <form class="stack-form" id="request-form">
+      <div class="form-block request-block request-block-core">
+        <strong class="form-block-title">1. Identificacion del requerimiento</strong>
+        <label>
+          <span>Linea</span>
+          <select id="request-line"></select>
+        </label>
+
+        <label>
+          <span>Marca</span>
+          <select id="request-brand"></select>
+        </label>
+
+        <label>
+          <span>Aplicacion / proceso</span>
+          <input type="text" value="Linea de transferencia termica para limpieza CIP">
+        </label>
+      </div>
+
+      <div class="form-block request-block request-block-tech">
+        <strong class="form-block-title">2. Datos tecnicos</strong>
+        <div id="dynamic-fields" class="dynamic-fields"></div>
+      </div>
+
+      <div class="smart-summary request-block request-summary-card">
+        <strong>Resumen</strong>
+        <p id="smart-summary-copy">Revisa la informacion antes de enviar tu solicitud.</p>
+      </div>
+
+      <div class="form-block request-block request-block-extra">
+        <strong class="form-block-title">3. Informacion adicional</strong>
+        <label>
+          <span>Tiempo requerido</span>
+          <select>
+            <option>Lo antes posible</option>
+            <option>Esta semana</option>
+            <option>Este mes</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Observaciones</span>
+          <textarea rows="4">Necesitamos una propuesta preliminar para revision tecnica.</textarea>
+        </label>
+
+        <div class="note-box">
+          <strong>Adjuntos</strong>
+          <p>Podras complementar tu requerimiento con informacion adicional si es necesaria.</p>
+        </div>
+      </div>
+
+      <div class="request-preview request-block request-preview-card">
+        <strong>Resumen previo al envio</strong>
+        <div class="request-preview-grid">
+          <div><span>Linea</span><strong id="preview-line">Intercambiadores de calor</strong></div>
+          <div><span>Marca</span><strong id="preview-brand">ALFA LAVAL</strong></div>
+          <div><span>Canal</span><strong>Solicitud guiada</strong></div>
+          <div><span>Destino</span><strong>Responsable de linea</strong></div>
+        </div>
+      </div>
+
+      <button type="submit" class="primary-btn">Enviar solicitud</button>
+    </form>
+  </section>
+`;

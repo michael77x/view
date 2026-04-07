@@ -1,0 +1,18 @@
+window.HiviAppTemplates.screens.formulas = `
+  <section class="screen tool-detail-screen" id="screen-formulas">
+    <div class="screen-head compact">
+      <p class="eyebrow">Referencia</p>
+      <h2>Formulas tecnicas</h2>
+      <p class="muted">Formulas de referencia rapida para vapor, aire comprimido y fluidos de proceso.</p>
+    </div>
+
+    <div class="formula-tabs">
+      <button class="calc-tab is-active" data-formula-tab="steam" type="button">Vapor</button>
+      <button class="calc-tab" data-formula-tab="air" type="button">Aire comprimido</button>
+      <button class="calc-tab" data-formula-tab="fluids" type="button">Fluidos</button>
+      <button class="calc-tab" data-formula-tab="pumps" type="button">Bombas</button>
+    </div>
+
+    <div id="formula-content" class="formula-list"></div>
+  </section>
+`;
