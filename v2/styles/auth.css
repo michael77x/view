@@ -1,0 +1,31 @@
+.auth-shell {   display: grid;   gap: 16px;   padding-top: 12px; }  .auth-screen.is-visible {   display: flex;   align-items: flex-start; }  .auth-hero-card {   padding: 22px;   border-radius: var(--radius-lg);   background:     linear-gradient(160deg, rgba(14, 127, 117, 0.96), rgba(10, 94, 87, 0.96)),     #0e7f75;   color: #f9fdfc;   border: 1px solid var(--border);   box-shadow: var(--shadow-soft); }  .auth-hero-card .muted, .auth-hero-card .eyebrow {   color: rgba(249, 253, 252, 0.82); }  .auth-hero-card h2 {   margin: 10px 0;   font-size: 2rem;   line-height: 1.05; }  .auth-mode-switch {   display: grid;   grid-template-columns: repeat(2, minmax(0, 1fr));   gap: 10px;   margin-top: 14px; }  .auth-mode-btn {   border: 1px solid rgba(255, 255, 255, 0.18);   border-radius: 999px;   background: rgba(255, 255, 255, 0.12);   color: rgba(255, 255, 255, 0.88);   padding: 12px 14px;   font-weight: 700;   cursor: pointer; }  .auth-mode-btn.is-active {   background: #fff;   border-color: transparent;   color: var(--brand-dark); }  .auth-form {   display: none; }  .auth-form.is-visible {   display: grid; }  .auth-inline {   display: flex;   justify-content: space-between;   align-items: center;   gap: 12px; }  .auth-helper {   color: var(--muted);   font-size: 0.85rem; }
+/* ── Registro 2 pasos (B4) ──────────────────────────────── */
+.reg-steps { display: flex; gap: 6px; }
+
+.reg-step { flex: 1; height: 4px; border-radius: 999px; background: rgba(255,255,255,0.18); transition: background 0.2s; }
+
+.reg-step.is-active { background: #fff; }
+
+.reg-step-label { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2px; }
+
+.label-primary span { display: flex; flex-direction: column; gap: 1px; }
+
+.field-note { font-size: 0.71rem; font-weight: 400; font-style: normal; color: var(--muted); }
+
+.verify-block { display: grid; gap: 6px; }
+
+.verify-hint { font-size: 0.74rem; color: var(--muted); line-height: 1.4; }
+
+.prefs-block { display: grid; gap: 6px; margin-top: 4px; }
+
+.prefs-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+.share-block { display: grid; gap: 6px; }
+
+.reg-step2-actions { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center; }
+
+.ghost-btn { border: 1px solid var(--border); border-radius: var(--radius); background: #fff; color: var(--text); padding: 13px 18px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+
+.ghost-btn:hover { background: #f3f7f6; }
+
+.reg-panel { display: grid; gap: 12px; }

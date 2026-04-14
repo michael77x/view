@@ -1,0 +1,1 @@
+window.HiviAppTemplates.screens.tools = `   <section class="screen tools-screen" id="screen-tools">     <div class="screen-head compact">       <p class="eyebrow">Herramientas</p>       <h2>Consulta rapida</h2>       <p class="muted">Recursos de apoyo para consulta, calculo y revision tecnica.</p>     </div>      <div class="tool-list" id="tool-list"></div>   </section> `;
