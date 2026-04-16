@@ -9,7 +9,7 @@ window.HiviAppTemplates.moreSheet = `
       </div>
       <div class="more-grid">
         <button class="more-link" data-screen-target="expert-consult" type="button">Consultar al experto</button>
-        <button class="more-link" data-screen-target="request" type="button">Solicitar propuesta</button>
+        <button class="more-link" data-screen-target="request" type="button">Crear Solicitud</button>
         <button class="more-link" data-screen-target="requests" type="button">Mis consultas</button>
         <button class="more-link" data-screen-target="brochures" type="button">Brochures y manuales</button>
       </div>
