@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PlanCo | Fases semanales del sistema PWA</title>
+  <style>
+    :root {
+      --bg: #eaf7cf;
+      --ink: #0f172a;
+      --muted: #4f5f42;
+      --card: #f7ffe8;
+      --line: #cfe7a8;
+      --primary: #7fbf31;
+      --ok: #16a34a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 26px 20px 40px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .topbar a {
+      text-decoration: none;
+      color: #4c7d1f;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 8px 0 6px;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin-bottom: 24px;
+      max-width: 780px;
+      line-height: 1.5;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+    }
+
+    .phase {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--primary);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 6px 20px rgba(88, 122, 34, .10);
+    }
+
+    .phase h2 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      font-size: 12px;
+      color: #365d12;
+      background: #e9f7ce;
+      border: 1px solid #c8e59d;
+      padding: 4px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 18px;
+      color: #22314d;
+      line-height: 1.5;
+    }
+
+    .stack {
+      margin-top: 18px;
+      background: #effaf3;
+      border: 1px solid #b8e8c8;
+      color: #14532d;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 14px;
+    }
+
+    .pwa-callout {
+      margin: 0 0 16px;
+      background: #edf9d9;
+      border: 1px solid #cce9a8;
+      border-left: 6px solid #7fbf31;
+      border-radius: 10px;
+      padding: 12px 14px;
+      color: #355b13;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <a href="index.html">← Volver al índice</a>
+    </div>
+
+    <h1>Plan semanal del sistema PWA (Angular + .NET)</h1>
+    <p class="subtitle">
+      Cronograma detallado por semana con foco en <strong>desarrollo directo</strong> de módulos para construir una <strong>PWA empresarial</strong> que cubra Seguridad, Maestros, Planeamiento, Sincronización, Tracking y Configuración.
+    </p>
+    <div class="pwa-callout">
+      <strong>Regla del plan:</strong> Semanas 1 a 15 son de desarrollo; la <strong>Semana 16</strong> está reservada exclusivamente para <strong>testing integral (QA + UAT)</strong>.
+    </div>
+
+    <section class="timeline">
+      <article class="phase">
+        <h2><span>Semana 1 · Desarrollo Base (Angular + .NET)</span><span class="chip">Hito entregable</span></h2>
+        <ul>
+          <li>Creación de solución backend .NET (API), estructura de proyectos y configuración inicial de base de datos.</li>
+          <li>Creación del proyecto Angular con layout principal, routing base y estructura de módulos.</li>
+          <li><strong>Entregable:</strong> Base de código compilando en frontend/backend con primer deploy en DEV.</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <h2><span>Semana 2 · Desarrollo de Seguridad y Sesión</span><span class="chip">Hito entregable</span></h2>
+        <ul>
+          <li>Implementación de login, refresh token, cambio de clave y cierre de sesión en backend .NET.</li>
+          <li>Implementación en Angular de login, guards, interceptores y manejo de sesión.</li>
+          <li><strong>Entregable:</strong> Acceso seguro funcional de punta a punta.</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <h2><span>Semana 3 · Desarrollo de Usuarios y Permisos</span><span class="chip">Hito entregable</span></h2>
+        <ul>
+          <li>CRUD de usuarios (listar, crear, editar, activar/desactivar) en frontend y backend.</li>
+          <li>Matriz de permisos por menú/opción con validación de accesos por rol.</li>
+          <li><strong>Entregable:</strong> Administración de usuarios y permisos operativa.</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <h2><span>Semana 4 · Desarrollo de Maestros I (Proveedores y Puertos)</span><span class="chip">Hito entregable</span></h2>
+        <ul>
+          <li>Implementación completa de CRUD y búsqueda de Proveedores.</li>
+          <li>Implementación de CRUD de Puertos con País y días en mar.</li>
+          <li><strong>Entregable:</strong> Maestros I listo para operación.</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <h2><span>Semana 5 · Desarrollo de Maestros II (Agentes, BCG y Artículos)</span><span class="chip">Hito entregable</span></h2>
+        <ul>
+          <li>CRUD de Agente Aduana y Agente Carga con reglas de negocio.</li>
+          <li>Matriz BCG paramétrica y consulta de Artículos con detalle.</li>
+          <li><strong>Entregable:</strong> Módulo Maestros completo.</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <h2><span>Semana 6 · Desarrollo de Planeamiento I (Consulta y filtros)</span><span class="chip">Hito entregable</span></h2>
+        <ul>
+          <li>Vistas de planeamiento por tabs: All SKU, Importados y Nacionales.</li>
+          <li>Filtros, búsqueda y ordenamiento para análisis operativo.</li>
+          <li><strong>Entregable:</strong> Planeamiento de consulta habilitado.</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <h2><span>Semana 7 · Desarrollo de Planeamiento II (Edición y exportación)</span><span class="chip">Hito entregable</span></h2>
+        <ul>
+          <li>Edición inline de LeadTime, PMM y TEP con persistencia backend.</li>
+          <li>Exportación de reportes de planeamiento y consumo a Excel.</li>
+          <li><strong>Entregable:</strong> Módulo Planeamiento end-to-end operativo.</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <h2><span>Semana 8 · Desarrollo de Sincronización</span><span class="chip">Hito entregable</span></h2>
+        <ul>
+          <li>Interfaz por tareas con checklist, progreso, estado y log de ejecución.</li>
+          <li>Integración backend de sincronización de productos, proveedores, stock, OC e inventario.</li>
+          <li><strong>Entregable:</strong> Sincronización controlada y trazable en operación.</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <h2><span>Semana 9 · Desarrollo de Tracking I (Seguimiento OC)</span><span class="chip">Hito entregable</span></h2>
+        <ul>
+          <li>Pantalla de seguimiento OC con filtros, orden y edición por campo.</li>
+          <li>Integración de catálogos de apoyo: agente carga, agente aduana y puerto.</li>
+          <li><strong>Entregable:</strong> Tracking operativo diario publicado.</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <h2><span>Semana 10 · Desarrollo de Tracking II (Detalle y Configuración)</span><span class="chip">Hito entregable</span></h2>
+        <ul>
+          <li>Detalle de OC por contexto y consulta de líneas de compra.</li>
+          <li>Configuración global de seguimiento y exportación de reportes.</li>
+          <li><strong>Entregable:</strong> Tracking completo con configuración funcional.</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <h2><span>Semana 11 · Desarrollo de Integración Final y Hardening</span><span class="chip">Hito entregable</span></h2>
+        <ul>
+          <li>Integración final entre todos los módulos y cierre de brechas técnicas.</li>
+          <li>Hardening de código, optimización de rendimiento y trazabilidad transversal.</li>
+          <li><strong>Entregable:</strong> Versión candidata final lista para pruebas.</li>
+        </ul>
+      </article>
+
+      <article class="phase">
+        <h2><span>Semana 12 · Testing Integral (QA + UAT)</span><span class="chip">Semana de testing</span></h2>
+        <ul>
+          <li>Pruebas funcionales, regresión end-to-end y validación de escenarios críticos.</li>
+          <li>UAT con usuarios clave, registro de incidencias y aprobación final.</li>
+          <li><strong>Entregable:</strong> Acta de pruebas aprobada y pase autorizado a producción.</li>
+        </ul>
+      </article>
+    </section>
+
+    <div class="stack">
+      <strong>Stack PWA propuesto:</strong> Angular (UI PWA con Service Worker + Manifest), .NET (API), SQL Server, autenticación JWT, background sync, push notifications y despliegue automatizado con CI/CD.
+    </div>
+  </div>
+</body>
+</html>

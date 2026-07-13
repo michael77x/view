@@ -3,83 +3,70 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hivimar App</title>
+  <title>PlanCo | Centro PWA</title>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --lime: #b8eb5b;
+      --ink: #121722;
+      --muted: #5f6675;
+      --line: #d9d9d9;
+    }
+
+    * { box-sizing: border-box; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f4f7f6;
+      margin: 0;
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 32px 24px;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--ink);
+      background: radial-gradient(circle at 20% 20%, #c7ef77 0%, var(--lime) 62%, #abd74d 100%);
     }
 
-    .launcher {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
+    .home {
       width: 100%;
-      max-width: 320px;
+      max-width: 760px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: 0 10px 28px rgba(15, 21, 33, .14);
     }
+
+    h1 { margin: 0 0 6px; font-size: 30px; }
+    p { margin: 0 0 16px; color: var(--muted); }
+
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; }
 
     .btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      padding: 16px 24px;
-      border-radius: 16px;
-      border: none;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
       text-decoration: none;
-      transition: opacity 0.15s, transform 0.12s;
+      border: 1px solid #d0d0d0;
+      border-radius: 9px;
+      padding: 11px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #121722;
+      background: #fff;
     }
 
-    .btn:hover { opacity: 0.85; transform: translateY(-1px); }
-    .btn:active { transform: translateY(0); }
-
-    .btn-v1 {
-      background: #e9eff0;
-      color: #1a2e2b;
-    }
-
-    .btn-v2 {
-      background: #0e7f75;
+    .btn.primary {
+      background: #11151d;
+      border-color: #11151d;
       color: #fff;
-      box-shadow: 0 4px 18px rgba(14,127,117,0.28);
-    }
-
-    .btn svg {
-      width: 18px;
-      height: 18px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 2.2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      flex-shrink: 0;
     }
   </style>
 </head>
 <body>
+  <main class="home">
+    <h1>PlanCo Mockups</h1>
+    <p>Accesos directos a planificación y pantallas navegables.</p>
 
-  <div class="launcher">
-    <a class="btn btn-v1" href="v1/index.html" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-      Abrir v1
-    </a>
-    <a class="btn btn-v2" href="v2/index.html" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-      Abrir v2
-    </a>
-  </div>
-
+    <div class="actions">
+      <a class="btn" href="fases.html">Fases</a>
+      <a class="btn primary" href="screens/index.html">Mockups</a>
+    </div>
+  </main>
 </body>
 </html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PlanCo | Mockups base dashboard PWA</title>
+  <style>
+    :root {
+      --lime: #b8eb5b;
+      --ink: #090b10;
+      --panel: #ececec;
+      --card: #ffffff;
+      --line: #d8d8d8;
+      --text: #1a1d24;
+      --muted: #727783;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at 30% 20%, #c6ef77 0%, var(--lime) 55%, #abd94f 100%);
+    }
+
+    .wrap { max-width: 1400px; margin: 0 auto; padding: 22px 20px 40px; }
+
+
+    .hero {
+      background: rgba(255,255,255,.75);
+      border: 1px solid #9fcf46;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 { margin: 0 0 6px; font-size: 30px; }
+    .hero p { margin: 0; color: #2f3645; line-height: 1.5; }
+
+    .board {
+      background: var(--panel);
+      border: 1px solid #bfc7ad;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 16px 40px rgba(13, 21, 33, .18);
+      display: grid;
+      grid-template-columns: 88px 1fr 300px;
+      min-height: 640px;
+    }
+
+    .sidebar {
+      background: #07090d;
+      color: #d7d7d7;
+      padding: 18px 12px;
+      display: grid;
+      gap: 16px;
+      align-content: start;
+      justify-items: center;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      border: 2px solid #9bcf3f;
+      color: #a6d94a;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .nav-dot {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      border: 1px solid #2a2f38;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      background: #10151f;
+      color: #c7c7c7;
+    }
+
+    .nav-dot.active {
+      background: #c7ea72;
+      color: #0e141f;
+      border-color: #b8e25b;
+      font-weight: 700;
+    }
+
+    .center {
+      padding: 18px;
+      border-right: 1px solid #d2d2d2;
+    }
+
+    .topbar {
+      background: #f6f6f6;
+      border: 1px solid #dddddd;
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .welcome h3 { margin: 0; font-size: 22px; }
+    .welcome p { margin: 3px 0 0; color: var(--muted); font-size: 13px; }
+
+    .actions { display: flex; gap: 8px; align-items: center; }
+    .pill {
+      border: 1px solid #cfcfcf;
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: #fff;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(140px, 1fr));
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .metric {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .metric .value { font-size: 30px; font-weight: 800; margin-bottom: 2px; }
+    .metric .label { color: var(--muted); font-size: 12px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .card h4 { margin: 0 0 8px; font-size: 16px; }
+    .chart { height: 150px; border: 1px dashed #cfd3d9; border-radius: 8px; background: linear-gradient(180deg,#fff,#f8f8f8); }
+
+    .list-item {
+      border: 1px solid #e2e2e2;
+      border-radius: 8px;
+      padding: 8px;
+      margin-bottom: 7px;
+      font-size: 13px;
+      background: #fafafa;
+    }
+
+    .right {
+      background: #f4f4f4;
+      padding: 18px;
+      display: grid;
+      align-content: start;
+      gap: 10px;
+    }
+
+    .profile {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .profile h3 { margin: 0 0 3px; }
+    .muted { color: var(--muted); font-size: 12px; }
+
+    .calendar, .trend {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .calendar .dots { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 8px; }
+    .calendar .dots span {
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      width: 26px;
+      height: 26px;
+      font-size: 11px;
+      background: #f4f6f8;
+    }
+    .calendar .dots span.hit { background: #c7ea72; font-weight: 700; }
+
+    .screens-link {
+      margin-top: 12px;
+      display: inline-block;
+      text-decoration: none;
+      background: #11151c;
+      color: #fff;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+
+    .note {
+      margin-top: 14px;
+      border: 1px solid #a7c866;
+      border-radius: 10px;
+      background: #eff9da;
+      padding: 10px;
+      color: #2b3d14;
+      font-size: 13px;
+    }
+
+    @media (max-width: 1180px) {
+      .board { grid-template-columns: 72px 1fr; }
+      .right { grid-column: 1 / -1; border-top: 1px solid #d0d0d0; }
+    }
+
+    @media (max-width: 760px) {
+      .metrics { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Mockup maestro del sistema PWA PlanCo</h1>
+      <p>Diseño base tomado del estilo de referencia: sidebar oscura, panel principal claro con tarjetas, área de perfil lateral y foco en operación diaria.</p>
+      <a class="screens-link" href="screens/index.html">Ver mockups por módulo</a>
+    </section>
+
+    <section class="board">
+      <aside class="sidebar">
+        <div class="logo">PC</div>
+        <div class="nav-dot active">🏠</div>
+        <div class="nav-dot">👤</div>
+        <div class="nav-dot">📦</div>
+        <div class="nav-dot">📈</div>
+        <div class="nav-dot">🚚</div>
+        <div class="nav-dot">⚙</div>
+      </aside>
+
+      <main class="center">
+        <div class="topbar">
+          <div class="welcome">
+            <h3>Good Morning, Equipo PlanCo</h3>
+            <p>Operación de compras importadas y planeamiento diario.</p>
+          </div>
+          <div class="actions">
+            <span class="pill">Weekly</span>
+            <span class="pill">PWA Online</span>
+            <span class="pill">Sync 09:42</span>
+          </div>
+        </div>
+
+        <div class="metrics">
+          <div class="metric"><div class="value">42</div><div class="label">OC en tránsito</div></div>
+          <div class="metric"><div class="value">13</div><div class="label">Alertas ETA</div></div>
+          <div class="metric"><div class="value">124</div><div class="label">SKU analizados</div></div>
+          <div class="metric"><div class="value">5</div><div class="label">Sync pendientes</div></div>
+        </div>
+
+        <div class="grid">
+          <article class="card">
+            <h4>Planeamiento SKU</h4>
+            <div class="chart"></div>
+          </article>
+          <article class="card">
+            <h4>Progreso semanal</h4>
+            <div class="list-item">LeadTime actualizados: 56</div>
+            <div class="list-item">PMM/TEP actualizados: 236</div>
+            <div class="list-item">Cardio Offline Sync: 10 tareas</div>
+          </article>
+        </div>
+
+        <div class="grid">
+          <article class="card">
+            <h4>Sincronización e integración</h4>
+            <div class="list-item">Productos / Proveedores / Stock</div>
+            <div class="list-item">Inventario / OC / Pronóstico</div>
+            <div class="list-item">Estado general: Operativo</div>
+          </article>
+          <article class="card">
+            <h4>Acciones rápidas</h4>
+            <div class="list-item">Abrir Tracking OC</div>
+            <div class="list-item">Configurar parámetros seguimiento</div>
+            <div class="list-item">Exportar reporte de planeamiento</div>
+          </article>
+        </div>
+      </main>
+
+      <aside class="right">
+        <section class="profile">
+          <h3>Tracy F. Cortez</h3>
+          <div class="muted">Planner & Tracking Analyst</div>
+          <div class="list-item">Rol: Administrador</div>
+          <div class="list-item">Estado: Activo</div>
+        </section>
+
+        <section class="calendar">
+          <h4>Calendario operativo</h4>
+          <div class="dots">
+            <span>1</span><span>2</span><span class="hit">3</span><span class="hit">4</span><span>5</span><span>6</span><span>7</span>
+            <span>8</span><span class="hit">9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span>
+          </div>
+        </section>
+
+        <section class="trend">
+          <h4>Actividad PWA</h4>
+          <div class="list-item">Uso offline: 78%</div>
+          <div class="list-item">Última instalación: 12 dispositivos</div>
+          <div class="list-item">Push enviados hoy: 36</div>
+        </section>
+      </aside>
+    </section>
+
+    <div class="note">
+      Este layout es la base visual oficial para el resto de mockups de módulos (Seguridad, Maestros, Planeamiento, Sincronización y Tracking) y mantiene enfoque PWA: instalación, modo offline, sincronización en segundo plano y notificaciones.
+    </div>
+  </div>
+</body>
+</html>
