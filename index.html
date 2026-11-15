@@ -89,7 +89,8 @@ button.vista { align-self: flex-start; margin: -40px 0 4px 12px; position: relat
 .usa { display: flex; flex-wrap: wrap; gap: 6px; font-size: .85rem; color: var(--ink-2); align-items: center; }
 .usa span { background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 2px 8px; color: var(--ink); }
 .bloqueado { font-weight: 600; font-size: .9rem; padding: 6px 10px; border-radius: 8px; border: 1px dashed var(--ink-3); }
-@media (max-width: 520px) { .grid { grid-template-columns: 1fr; } </style>
+@media (max-width: 520px) { .grid { grid-template-columns: 1fr; } }
+</style>
 </head>
 <body>
 <header>
@@ -194,7 +195,8 @@ const mezcla = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]
 function pintar(f, t, vuelta = 0) {
   const P = {};
   if (f.ej.cuadros) { // movimiento en círculo: recorre los cuadros sin volver atrás
-    const c = f.ej.cuadros, x = (vuelta % 1) * c.length, i = Math.floor(x), u = x - i;
+    const c = f.ej.cuadros, v = (vuelta * 2400) / (f.ej.msVuelta || 2400);
+    const x = (v % 1) * c.length, i = Math.floor(x), u = f.ej.msVuelta ? 0.5 - 0.5 * Math.cos(Math.PI * (x - i)) : x - i;
     for (const k in c[i]) P[k] = mezcla(c[i][k], c[(i + 1) % c.length][k], u);
   } else for (const k in f.ej.ini) P[k] = mezcla(f.ej.ini[k], f.ej.fin[k], t);
   const pts = (...ks) => ks.map((k) => P[k].join(",")).join(" ");
@@ -298,7 +300,13 @@ function vistasCirculo(ej) {
     ver("de frente", ([X, Y, Z]) => [100 + Z, 150 - Y], {}),
   ];
 }
-const vistasDe = (ej) => ej.circulo ? vistasCirculo(ej) : [{ ...ej, vista: ej.vista || "de lado" }, otraVista(ej), vistaInclinada(ej)];
+const vistasSimples = (ej) => [{ ...ej, vista: ej.vista || "de lado" }, otraVista(ej), vistaInclinada(ej)];
+// Con fin2 la figura alterna lados: centro → fin → centro → fin2 (1,6 s cada paso).
+function vistasAlternas(ej) {
+  const a = vistasSimples(ej), b = vistasSimples({ ...ej, fin: ej.fin2 });
+  return a.map((v, i) => ({ ...v, cuadros: [v.ini, v.fin, v.ini, b[i].fin], msVuelta: 6400 }));
+}
+const vistasDe = (ej) => ej.circulo ? vistasCirculo(ej) : ej.fin2 ? vistasAlternas(ej) : vistasSimples(ej);
 
 const seg = (n) => (n >= 60 ? (n % 60 ? `${Math.floor(n / 60)} min ${n % 60} s` : `${n / 60} min`) : `${n} s`);
 
@@ -321,26 +329,26 @@ function datosEjercicio(ej, modo) {
   const series = ej.series || (fase ? fase.series : 3);
   if (ej.escalera) {
     const lado = /por lado/.test(ej.reps) ? " por lado" : "";
-    return `<div class="escalera"><div class="et">Escalera de Michael · ${R.escalones.length} series</div>
-      <table>${R.escalones.map(([peso, reps], i) => `<tr><td>Serie ${i + 1}</td><td><b>${kg(peso)}</b></td><td><b>${reps}</b> repeticiones${lado}</td></tr>`).join("")}</table>
+    const escalones = ej.escalones || R.escalones;
+    return `<div class="escalera"><div class="et">Escalera de Michael · ${escalones.length} series</div>
+      <table>${escalones.map(([peso, reps], i) => `<tr><td>Serie ${i + 1}</td><td><b>${kg(peso)}</b></td><td><b>${reps}</b> repeticiones${lado}</td></tr>`).join("")}</table>
       <div class="small">Mancuernas: <b>${esc(cuantas(ej))}</b></div></div>`;
   }
   if (ej.kg && modo === "dia") {
-    const max = (ej.reps.match(/\d+\D+(\d+)/) || ej.reps.match(/(\d+)/))[1];
     const cada = /por (lado|pierna)/.exec(ej.reps);
     const reps = esc(ej.reps.replace(/ por (lado|pierna)/, "").replace(/\s*\(.*\)/, ""));
     return `<div class="escalera"><div class="et">${series} series · Mancuernas: ${esc(cuantas(ej))}</div>
-      <table>${Array.from({ length: series }, (_, i) => `<tr><td>Serie ${i + 1}</td><td><b>${kg(ej.kg)}</b></td><td><b>${reps}</b> ${/ s$/.test(reps) ? "caminando" : "repeticiones"}${cada ? " por " + cada[1] : ""}</td></tr>`).join("")}</table>
-      ${ej.sube ? `<div class="small">Al fallo. Cuando pases de <b>${max}</b> en todas las series, sube a <b>${kg(ej.sube)}</b>.</div>` : `<div class="small">Al fallo. ${kg(ej.kg)} es la más pesada que tienes: si pasas de ${max}, haz las repeticiones más lentas.</div>`}</div>`;
+      <table>${Array.from({ length: series }, (_, i) => `<tr><td>Serie ${i + 1}</td><td><b>${kg(ej.kg)}</b></td><td><b>${reps}</b> ${/ s$/.test(reps) ? "caminando" : "repeticiones"}${cada ? " por " + cada[1] : ""}</td></tr>`).join("")}</table></div>`;
   }
   const filas = [["Series", series > 1 ? series : null], [modo === "dia" ? "Repeticiones" : "Cuánto", ej.reps], ["Peso", ej.peso], ["Mancuernas", cuantas(ej)]]
     .filter(([, v]) => v && v !== "—");
   return `<dl class="datos">${filas.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>`;
 }
 function descansoDe(ej) {
-  if (ej.escalera) return { s: R.descansoEscalera, txt: `Entre series: solo cambiar de mancuerna (unos ${R.descansoEscalera} s). Entre un lado y otro, sin descanso.` };
+  const despues = `<br>Al terminar este ejercicio: <b>${seg(R.entreEjercicios)}</b> antes del siguiente.`;
+  if (ej.escalera) return { s: R.descansoEscalera, txt: `Entre series: solo cambiar de mancuerna (unos ${R.descansoEscalera} s). Entre un lado y otro, sin descanso.` + despues };
   const s = fase ? fase.descanso : 45;
-  return { s, txt: `Entre series: <b>${seg(s)}</b>.` };
+  return { s, txt: `Entre series: <b>${seg(s)}</b>.` + despues };
 }
 // modo: "dia" (entrenamiento, con descanso), "calentamiento" o "estira"
 function tarjeta(id, i, modo) {

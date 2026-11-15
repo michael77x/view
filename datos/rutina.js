@@ -24,8 +24,10 @@ window.RUTINA = {
   entreEjercicios: 60,
 
   // Escalera de Michael: así entrena él los músculos pequeños (tríceps, bíceps, hombros).
-  // [peso en kg, repeticiones]. Descanso solo para cambiar de mancuerna.
-  // En los demás ejercicios: kg = la mancuerna que usas en todas las series; sube = la siguiente cuando llegues al máximo.
+  // [peso en kg, repeticiones]. Descanso solo para cambiar de mancuerna. Un ejercicio puede tener sus propios
+  // `escalones` (lo que Michael logra en ese ejercicio).
+  // En los demás ejercicios: kg = la mancuerna que usa en todas las series. Claude la ajusta con lo que Michael cuenta
+  // después de entrenar (15/11/2026: press en el suelo → 10 kg, press de hombros → 7,5 kg).
   escalones: [[3, 40], [5, 30], [7.5, 20], [10, 10]],
 
   // Lo que Michael tiene en casa (15/11/2026). Cada ejercicio muestra lo que usa.
@@ -46,7 +48,7 @@ window.RUTINA = {
   // Calentamiento sin pesas, sin caminar ni marchar (Michael, 15/11/2026).
 
   // Los que Michael hace al final de cada entrenamiento (los pasó el 15/11/2026), en su orden.
-  estiramientos: ["nino", "cobra", "puente_estira", "rodillas_pecho", "torsion", "paloma"],
+  estiramientos: ["nino", "cobra", "paloma", "puente_estira", "rodillas_pecho", "torsion"],
 
   dias: {
     E1: { nombre: "Empuje 1", corto: "Empuje", musculos: "Pecho, hombros y tríceps",
@@ -65,7 +67,7 @@ window.RUTINA = {
 
   ejercicios: {
     sentadilla_banco: {
-      cinturon: true, nombre: "Sentadilla al banco", musculos: "Piernas y glúteos", reps: "15–20", peso: "10 kg al pecho (empieza con 7,5 kg)", kg: 7.5, sube: 10,
+      cinturon: true, nombre: "Sentadilla al banco", musculos: "Piernas y glúteos", reps: "15–20", peso: "10 kg al pecho (empieza con 7,5 kg)", kg: 7.5,
       pasos: ["Párate delante del banco, pies al ancho de hombros.", "Lleva la cadera atrás hasta tocar el banco, sin dejarte caer.", "Empuja el suelo y sube."],
       respira: "Inhala al bajar, exhala al subir.", cuidado: "Pecho arriba, espalda recta. Las rodillas siguen la dirección de los pies.",
       mancuerna: "1, con las dos manos al pecho", juntas: true,
@@ -85,7 +87,7 @@ window.RUTINA = {
       fin: { h: [127, 72], n: [116, 80], p: [72, 94], kL: [84, 122], fL: [86, 150], kR: [62, 122], fR: [54, 150], eL: [120, 97], hL: [122, 114], eR: [96, 72], hR: [104, 94] },
     },
     press_suelo: {
-      nombre: "Press de pecho en el suelo", musculos: "Pecho, hombros y tríceps", reps: "15–20", peso: "7,5 kg → 10 kg", kg: 7.5, sube: 10,
+      nombre: "Press de pecho en el suelo", musculos: "Pecho, hombros y tríceps", reps: "15–20", peso: "7,5 kg → 10 kg", kg: 10,
       pasos: ["Acostado en la alfombra, rodillas dobladas.", "Codos apoyados en el suelo a 45° del cuerpo.", "Empuja las mancuernas hacia arriba y baja hasta que el brazo toque el suelo."],
       respira: "Exhala al empujar.", cuidado: "Reemplaza la banca: el suelo limita el recorrido y protege el hombro.",
       props: { tapete: true, mancuernas: "LR" },
@@ -102,7 +104,7 @@ window.RUTINA = {
       fin: { h: [38, 138], n: [52, 141], p: [92, 122], kL: [122, 112], fL: [134, 147], kR: [124, 114], fR: [136, 147], eL: [64, 146], hL: [80, 147], eR: [70, 118], hR: [90, 114] },
     },
     press_hombro: {
-      nombre: "Press de hombros sentado", musculos: "Hombros y tríceps", reps: "12–15", peso: "5 kg → 7,5 kg", kg: 5, sube: 7.5,
+      nombre: "Press de hombros sentado", musculos: "Hombros y tríceps", reps: "12–15", peso: "5 kg → 7,5 kg", kg: 7.5,
       pasos: ["Siéntate en el banco con la espalda recta.", "Mancuernas a la altura de los hombros.", "Empuja hacia arriba sin bloquear los codos y baja controlado."],
       respira: "Exhala al empujar. Nunca aguantes el aire con los brazos arriba.", cuidado: "No arquees la espalda; aprieta un poco el abdomen.",
       props: { banco: [82, 32], mancuernas: "LR" },
@@ -119,11 +121,13 @@ window.RUTINA = {
     },
     dead_bug: {
       nombre: "Dead bug", musculos: "Abdomen profundo", reps: "8 por lado", peso: "Sin peso",
-      pasos: ["Boca arriba, brazos al techo, rodillas dobladas a 90°.", "Baja un brazo atrás y la pierna contraria adelante, despacio.", "Vuelve y cambia."],
+      pasos: ["Boca arriba: brazos estirados hacia el techo y rodillas dobladas en el aire, encima de la cadera.", "Estira hacia el suelo un brazo (atrás de la cabeza) y la pierna contraria (adelante), despacio, sin tocar el suelo.", "Vuelve al centro y hazlo con el otro brazo y la otra pierna. Cada vez que vuelves cuenta una."],
       respira: "Exhala al estirar.", cuidado: "La espalda baja pegada a la alfombra todo el tiempo.",
       props: { tapete: true },
+      // La figura alterna: centro → brazo izquierdo y pierna derecha → centro → brazo derecho y pierna izquierda.
       ini: { h: [46, 136], n: [60, 140], p: [106, 140], kL: [106, 112], fL: [130, 112], kR: [108, 113], fR: [132, 113], eL: [60, 118], hL: [60, 96], eR: [62, 118], hR: [62, 96] },
       fin: { h: [46, 136], n: [60, 140], p: [106, 140], kL: [106, 112], fL: [130, 112], kR: [134, 132], fR: [162, 140], eL: [42, 128], hL: [22, 136], eR: [62, 118], hR: [62, 96] },
+      fin2: { h: [46, 136], n: [60, 140], p: [106, 140], kL: [134, 132], fL: [162, 140], kR: [108, 113], fR: [132, 113], eL: [60, 118], hL: [60, 96], eR: [42, 128], hR: [22, 136] },
     },
     peso_muerto_rumano: {
       cinturon: true, nombre: "Peso muerto rumano", musculos: "Isquiotibiales, glúteos y espalda", reps: "15", peso: "10 kg", kg: 10,
@@ -134,7 +138,7 @@ window.RUTINA = {
       fin: { h: [141, 60], n: [130, 66], p: [88, 88], kL: [94, 119], fL: [98, 150], kR: [96, 119], fR: [100, 150], eL: [130, 90], hL: [130, 112], eR: [132, 90], hR: [132, 112] },
     },
     zancada: {
-      cinturon: true, nombre: "Zancada estática", musculos: "Piernas y glúteos", reps: "12 por pierna", peso: "7,5 kg → 10 kg", kg: 7.5, sube: 10,
+      cinturon: true, nombre: "Zancada estática", musculos: "Piernas y glúteos", reps: "12 por pierna", peso: "7,5 kg → 10 kg", kg: 7.5,
       pasos: ["Da un paso largo: un pie adelante y otro atrás.", "Baja recto hasta que la rodilla de atrás casi toque el suelo.", "Sube empujando con la pierna de adelante."],
       respira: "Inhala al bajar, exhala al subir.", cuidado: "Tronco recto. Si pierdes el equilibrio, apoya una mano en la pared.",
       eje: "X", // barra de adelante hacia atrás (palmas mirándose o hacia abajo)
@@ -151,7 +155,7 @@ window.RUTINA = {
       fin: { h: [100, 28], n: [100, 42], p: [100, 90], kL: [98, 120], fL: [96, 150], kR: [102, 120], fR: [104, 150], eL: [100, 66], hL: [112, 50], eR: [102, 66], hR: [114, 50] },
     },
     elevacion_lateral: {
-      nombre: "Elevaciones laterales", musculos: "Hombros", escalera: true, series: 4, reps: "40 · 30 · 20 · 10", peso: "3 → 5 → 7,5 → 10 kg",
+      nombre: "Elevaciones laterales", musculos: "Hombros", escalera: true, escalones: [[3, 30], [5, 20], [7.5, 10], [10, 5]], series: 4, reps: "30 · 20 · 10 · 5", peso: "3 → 5 → 7,5 → 10 kg",
       pasos: ["De pie, mancuernas a los lados.", "Sube los brazos hacia los lados hasta la altura de los hombros.", "Baja despacio."],
       respira: "Exhala al subir.", cuidado: "Codos un poco doblados; no subas por encima del hombro. Si con 10 kg no sale limpio, termina con 7,5 kg × 15.",
       eje: "X", // barra de adelante hacia atrás (palmas mirándose o hacia abajo)
@@ -185,7 +189,7 @@ window.RUTINA = {
       fin: { h: [150, 114], n: [138, 120], p: [90, 128], kL: [72, 145], fL: [46, 147], kR: [74, 145], fR: [48, 147], eL: [160, 128], hL: [178, 138], eR: [161, 128], hR: [179, 138] },
     },
     extension_triceps: {
-      nombre: "Extensión de tríceps sentado", musculos: "Tríceps", escalera: true, series: 4, reps: "40 · 30 · 20 · 10 por lado", peso: "3 → 5 → 7,5 → 10 kg",
+      nombre: "Extensión de tríceps sentado", musculos: "Tríceps", escalera: true, escalones: [[3, 30], [5, 20], [7.5, 10], [10, 5]], series: 4, reps: "30 · 20 · 10 · 5 por lado", peso: "3 → 5 → 7,5 → 10 kg",
       pasos: ["Siéntate en el banco con la espalda recta y la mancuerna arriba, brazo estirado.", "Baja la mancuerna detrás de la cabeza doblando solo el codo.", "Estira el brazo de nuevo."],
       respira: "Exhala al estirar el brazo.", cuidado: "El codo apunta al techo y no se abre. Abdomen firme para no arquear la espalda.",
       mancuerna: "1: un brazo y luego el otro",
@@ -196,7 +200,7 @@ window.RUTINA = {
       fin: { h: [97, 50], n: [97, 62], p: [97, 110], kL: [124, 110], fL: [124, 150], kR: [126, 111], fR: [126, 150], eL: [98, 86], hL: [112, 104], eR: [104, 38], hR: [86, 47] },
     },
     patada_triceps: {
-      nombre: "Patada de tríceps", musculos: "Tríceps", escalera: true, series: 4, reps: "40 · 30 · 20 · 10 por lado", peso: "3 → 5 → 7,5 → 10 kg",
+      nombre: "Patada de tríceps", musculos: "Tríceps", escalera: true, escalones: [[3, 30], [5, 20], [7.5, 10], [10, 5]], series: 4, reps: "30 · 20 · 10 · 5 por lado", peso: "3 → 5 → 7,5 → 10 kg",
       pasos: ["Apoya una mano en el banco, espalda plana como en el remo.", "Codo pegado al cuerpo, a la altura de la espalda.", "Estira el brazo hacia atrás y vuelve, sin mover el codo."],
       respira: "Exhala al estirar.", cuidado: "Solo se mueve el antebrazo. La mano en el banco protege la lumbar.",
       mancuerna: "1: un brazo y luego el otro",
@@ -206,7 +210,7 @@ window.RUTINA = {
       fin: { h: [127, 72], n: [116, 80], p: [72, 94], kL: [84, 122], fL: [86, 150], kR: [62, 122], fR: [54, 150], eL: [120, 97], hL: [122, 114], eR: [96, 84], hR: [74, 90] },
     },
     aperturas_suelo: {
-      nombre: "Aperturas en el suelo", musculos: "Pecho", reps: "15–20", peso: "5 kg → 7,5 kg", kg: 5, sube: 7.5,
+      nombre: "Aperturas en el suelo", musculos: "Pecho", reps: "15–20", peso: "5 kg → 7,5 kg", kg: 5,
       pasos: ["Acostado en la alfombra, rodillas dobladas, mancuernas juntas sobre el pecho.", "Abre los brazos hacia los lados con los codos un poco doblados.", "Baja hasta que los codos toquen el suelo y vuelve a juntar."],
       respira: "Inhala al abrir, exhala al cerrar.", cuidado: "El suelo frena el recorrido y cuida el hombro.",
       eje: "X", // barra de adelante hacia atrás (palmas mirándose o hacia abajo)
@@ -218,7 +222,7 @@ window.RUTINA = {
       fin: { h: [100, 20], n: [100, 34], p: [100, 84], kL: [92, 112], fL: [90, 130], kR: [108, 112], fR: [110, 130], eL: [78, 40], hL: [58, 44], eR: [122, 40], hR: [142, 44] },
     },
     aperturas_invertidas: {
-      nombre: "Aperturas invertidas sentado", musculos: "Espalda alta y parte de atrás del hombro", reps: "15–20", peso: "3 kg → 5 kg", kg: 3, sube: 5,
+      nombre: "Aperturas invertidas sentado", musculos: "Espalda alta y parte de atrás del hombro", reps: "15–20", peso: "3 kg → 5 kg", kg: 3,
       pasos: ["Sentado al borde del banco, inclina el pecho hacia los muslos con la espalda recta.", "Mancuernas colgando bajo las piernas.", "Abre los brazos hacia los lados juntando los omóplatos."],
       respira: "Exhala al abrir.", cuidado: "Peso ligero: es un músculo pequeño. Al estar sentado, la lumbar descansa.",
       eje: "X", // barra de adelante hacia atrás (palmas mirándose o hacia abajo)
@@ -230,7 +234,7 @@ window.RUTINA = {
       fin: { h: [130, 74], n: [120, 82], p: [90, 110], kL: [118, 110], fL: [118, 150], kR: [120, 111], fR: [120, 150], eL: [111, 72], hL: [107, 56], eR: [112, 72], hR: [108, 56] },
     },
     pullover: {
-      nombre: "Pullover en el suelo", musculos: "Espalda ancha y pecho", reps: "15–20", peso: "7,5 kg → 10 kg (una mancuerna)", kg: 7.5, sube: 10,
+      nombre: "Pullover en el suelo", musculos: "Espalda ancha y pecho", reps: "15–20", peso: "7,5 kg → 10 kg (una mancuerna)", kg: 7.5,
       pasos: ["Acostado, rodillas dobladas, una mancuerna con las dos manos sobre el pecho.", "Llévala hacia atrás por encima de la cabeza con los codos un poco doblados.", "Vuelve a subirla sobre el pecho."],
       respira: "Inhala al bajar atrás, exhala al subir.", cuidado: "La espalda baja pegada a la alfombra; baja solo hasta donde no se despegue.",
       mancuerna: "1, con las dos manos", juntas: true,
@@ -248,7 +252,7 @@ window.RUTINA = {
       fin: { h: [100, 28], n: [100, 42], p: [100, 90], kL: [98, 120], fL: [96, 150], kR: [102, 120], fR: [104, 150], eL: [100, 66], hL: [112, 50], eR: [102, 66], hR: [114, 50] },
     },
     remo_pecho_banco: {
-      nombre: "Remo con el pecho en el banco", musculos: "Espalda", reps: "15–20", peso: "7,5 kg → 10 kg", kg: 7.5, sube: 10,
+      nombre: "Remo con el pecho en el banco", musculos: "Espalda", reps: "15–20", peso: "7,5 kg → 10 kg", kg: 7.5,
       pasos: ["De rodillas detrás del banco, apoya el pecho en el asiento.", "Mancuernas colgando a los lados del banco.", "Sube las dos a la vez llevando los codos atrás."],
       respira: "Exhala al subir.", cuidado: "El banco sostiene el tronco: la lumbar no trabaja. Si el banco se mueve, ponlo contra la pared.",
       eje: "X", // barra de adelante hacia atrás (palmas mirándose o hacia abajo)
@@ -266,7 +270,7 @@ window.RUTINA = {
       fin: { h: [100, 20], n: [100, 34], p: [100, 82], kL: [98, 112], fL: [98, 142], kR: [100, 112], fR: [100, 142], eL: [100, 58], hL: [100, 82], eR: [101, 58], hR: [101, 82] },
     },
     bulgara: {
-      cinturon: true, nombre: "Sentadilla búlgara", musculos: "Piernas y glúteos", reps: "12 por pierna", peso: "5 kg → 7,5 kg", kg: 5, sube: 7.5,
+      cinturon: true, nombre: "Sentadilla búlgara", musculos: "Piernas y glúteos", reps: "12 por pierna", peso: "5 kg → 7,5 kg", kg: 5,
       pasos: ["De espaldas al banco, apoya el empeine de un pie en el asiento (no te subas).", "El otro pie bien adelante.", "Baja recto hasta que el muslo de adelante quede casi horizontal y sube."],
       respira: "Inhala al bajar, exhala al subir.", cuidado: "Banco contra la pared para que no se deslice. Tronco recto.",
       eje: "X", // barra de adelante hacia atrás (palmas mirándose o hacia abajo)
