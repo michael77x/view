@@ -57,13 +57,13 @@ window.RUTINA = {
     T1: { nombre: "Tirón 1", corto: "Tirón", musculos: "Espalda y bíceps",
       ejercicios: ["remo", "aperturas_invertidas", "pullover", "curl", "bird_dog"] },
     P1: { nombre: "Piernas 1", corto: "Piernas", musculos: "Piernas, glúteos y núcleo",
-      ejercicios: ["sentadilla_banco", "peso_muerto_rumano", "zancada", "elevacion_talones", "plancha"] },
+      ejercicios: ["sentadilla_banco", "peso_muerto_rumano", "zancada", "elevacion_talones", "curl_up"] },
     E2: { nombre: "Empuje 2", corto: "Empuje", musculos: "Pecho, hombros y tríceps",
-      ejercicios: ["aperturas_suelo", "press_suelo", "elevacion_lateral", "patada_triceps", "plancha"] },
+      ejercicios: ["aperturas_suelo", "press_suelo", "elevacion_lateral", "patada_triceps", "curl_up"] },
     T2: { nombre: "Tirón 2", corto: "Tirón", musculos: "Espalda y bíceps",
-      ejercicios: ["remo_pecho_banco", "pullover", "aperturas_invertidas", "curl_martillo", "bird_dog", "rueda"] },
+      ejercicios: ["remo_zancada", "pullover", "aperturas_invertidas", "curl_martillo", "bird_dog", "rueda"] },
     P2: { nombre: "Piernas 2", corto: "Piernas", musculos: "Piernas, glúteos y núcleo",
-      ejercicios: ["bulgara", "peso_muerto_rumano", "puente", "granjero", "dead_bug"] },
+      ejercicios: ["bulgara", "peso_muerto_rumano", "puente", "encogimientos", "dead_bug"] },
   },
 
   ejercicios: {
@@ -166,24 +166,27 @@ window.RUTINA = {
       ini: { h: [100, 28], n: [100, 42], p: [100, 90], kL: [93, 120], fL: [91, 150], kR: [107, 120], fR: [109, 150], eL: [91, 64], hL: [89, 86], eR: [109, 64], hR: [111, 86] },
       fin: { h: [100, 28], n: [100, 42], p: [100, 90], kL: [93, 120], fL: [91, 150], kR: [107, 120], fR: [109, 150], eL: [78, 46], hL: [56, 48], eR: [122, 46], hR: [144, 48] },
     },
-    plancha: {
-      nombre: "Plancha", musculos: "Núcleo", reps: "20–30 s (de rodillas si cuesta)", peso: "Peso corporal",
-      pasos: ["Antebrazos en la alfombra, codos bajo los hombros.", "Cuerpo recto de cabeza a talones.", "Mantén el tiempo respirando."],
-      respira: "Respira normal todo el tiempo: es lo más importante con presión alta.", cuidado: "Si se hunde la cintura o duele la lumbar, apoya las rodillas.",
+    curl_up: {
+      // Reemplaza a la plancha: Michael quiere ejercicios con movimiento, no aguantar quieto (15/11/2026).
+      nombre: "Curl-up de McGill", musculos: "Abdomen, cuidando la lumbar", reps: "8–10 (2 s arriba)", peso: "Peso corporal",
+      pasos: ["Boca arriba: una pierna doblada y la otra estirada; las manos debajo de la espalda baja, para no aplanarla.", "Levanta apenas la cabeza y los hombros del suelo, como un bloque, sin doblar el cuello.", "Quédate 2 segundos arriba y baja despacio. Cambia de pierna a la mitad."],
+      respira: "Exhala al subir; respira normal arriba.", cuidado: "Es un movimiento corto: no es un abdominal completo. La espalda baja no se mueve.",
       props: { tapete: true },
-      ini: { h: [142, 118], n: [130, 124], p: [85, 128], kL: [60, 136], fL: [36, 146], kR: [61, 137], fR: [37, 146], eL: [130, 146], hL: [152, 146], eR: [131, 146], hR: [153, 146] },
-      fin: { h: [142, 117], n: [130, 123], p: [85, 126], kL: [60, 135], fL: [36, 146], kR: [61, 136], fR: [37, 146], eL: [130, 146], hL: [152, 146], eR: [131, 146], hR: [153, 146] },
+      ini: { h: [38, 138], n: [52, 142], p: [100, 142], kL: [122, 118], fL: [136, 147], kR: [130, 144], fR: [158, 146], eL: [70, 146], hL: [90, 146], eR: [71, 146], hR: [91, 146] },
+      fin: { h: [44, 124], n: [56, 132], p: [100, 142], kL: [122, 118], fL: [136, 147], kR: [130, 144], fR: [158, 146], eL: [73, 143], hL: [90, 146], eR: [74, 143], hR: [91, 146] },
     },
-    granjero: {
-      cinturon: true, nombre: "Paseo del granjero", musculos: "Agarre, núcleo y postura", reps: "40 s", peso: "10 kg", kg: 10,
-      pasos: ["Toma una mancuerna pesada en cada mano.", "Camina erguido, hombros atrás, pasos cortos.", "Deja las mancuernas doblando las rodillas, no la espalda."],
-      respira: "Respira normal mientras caminas.", cuidado: "Fortalece la zona lumbar sin doblarla.",
+    encogimientos: {
+      // Reemplaza al sostén del granjero: con movimiento y en el sitio (15/11/2026).
+      nombre: "Encogimiento de hombros", musculos: "Espalda alta, trapecios y agarre", reps: "15–20 (1 s arriba)", peso: "10 kg", kg: 10,
+      pasos: ["De pie, una mancuerna de 10 kg en cada mano, a los lados del cuerpo.", "Sube los hombros hacia las orejas, sin doblar los codos.", "Aguanta 1 segundo arriba y baja despacio."],
+      respira: "Exhala al subir, inhala al bajar.", cuidado: "Sin girar los hombros en círculo: solo arriba y abajo. Cuello relajado.",
       eje: "neutro", // agarre neutro: el mango cruza la palma y gira con el antebrazo
       props: { mancuernas: "LR" },
-      ini: { h: [100, 28], n: [100, 42], p: [100, 90], kL: [106, 120], fL: [112, 150], kR: [94, 121], fR: [86, 150], eL: [100, 66], hL: [100, 90], eR: [101, 66], hR: [101, 90] },
-      fin: { h: [100, 28], n: [100, 42], p: [100, 90], kL: [94, 121], fL: [86, 150], kR: [106, 120], fR: [112, 150], eL: [100, 66], hL: [100, 90], eR: [101, 66], hR: [101, 90] },
+      ini: { h: [100, 28], n: [100, 42], p: [100, 90], kL: [99, 120], fL: [98, 150], kR: [101, 120], fR: [100, 150], eL: [101, 67], hL: [102, 91], eR: [102, 67], hR: [103, 91] },
+      fin: { h: [100, 27], n: [100, 34], p: [100, 90], kL: [99, 120], fL: [98, 150], kR: [101, 120], fR: [100, 150], eL: [101, 59], hL: [102, 83], eR: [102, 59], hR: [103, 83] },
     },
     rueda: {
+      otraArriba: true, // de frente no se entiende (rueda hacia la cámara): la otra vista va desde arriba
       nombre: "Rueda abdominal (de rodillas)", musculos: "Abdomen", reps: "6–8", peso: "Peso corporal", fase: 3,
       pasos: ["De rodillas en la alfombra, manos en la rueda bajo los hombros.", "Rueda hacia adelante solo hasta donde mantengas la espalda recta.", "Vuelve apretando el abdomen."],
       respira: "Exhala al volver.", cuidado: "Recorrido corto al principio. Si duele la lumbar, se suspende.",
@@ -255,14 +258,16 @@ window.RUTINA = {
       ini: { h: [100, 28], n: [100, 42], p: [100, 90], kL: [98, 120], fL: [96, 150], kR: [102, 120], fR: [104, 150], eL: [103, 66], hL: [107, 88], eR: [105, 66], hR: [110, 88] },
       fin: { h: [100, 28], n: [100, 42], p: [100, 90], kL: [98, 120], fL: [96, 150], kR: [102, 120], fR: [104, 150], eL: [103, 66], hL: [115, 48], eR: [105, 66], hR: [117, 48] },
     },
-    remo_pecho_banco: {
-      nombre: "Remo con el pecho en el banco", musculos: "Espalda", reps: "15–20", peso: "7,5 kg → 10 kg", kg: 7.5,
-      pasos: ["De rodillas detrás del banco, apoya el pecho en el asiento.", "Mancuernas colgando a los lados del banco.", "Sube las dos a la vez llevando los codos atrás."],
-      respira: "Exhala al subir.", cuidado: "El banco sostiene el tronco: la lumbar no trabaja. Si el banco se mueve, ponlo contra la pared.",
+    remo_zancada: {
+      // Reemplaza al remo con el pecho en el banco: a Michael le resultaba incómodo (15/11/2026).
+      nombre: "Remo en zancada a una mano", musculos: "Espalda y bíceps", reps: "15–20 por lado", peso: "10 kg", kg: 10,
+      pasos: ["De pie, un pie adelante y el otro atrás; inclina el tronco hacia adelante con la espalda recta.", "Apoya la mano libre en el muslo de adelante: sostiene el tronco y cuida la lumbar.", "Con la otra mano sube la mancuerna hacia la cadera, llevando el codo atrás. Cambia de lado."],
+      respira: "Exhala al subir, inhala al bajar.", cuidado: "No gires el tronco al subir. La mano en el muslo hace el trabajo del banco.",
+      mancuerna: "1: un lado y luego el otro",
       eje: "neutro", // agarre neutro: el mango cruza la palma y gira con el antebrazo
-      props: { tapete: true, banco: [92, 32], mancuernas: "LR" },
-      ini: { h: [128, 102], n: [116, 106], p: [70, 112], kL: [64, 146], fL: [38, 147], kR: [66, 146], fR: [40, 147], eL: [118, 124], hL: [120, 144], eR: [119, 124], hR: [121, 144] },
-      fin: { h: [128, 102], n: [116, 106], p: [70, 112], kL: [64, 146], fL: [38, 147], kR: [66, 146], fR: [40, 147], eL: [100, 98], hL: [108, 118], eR: [101, 98], hR: [109, 118] },
+      props: { mancuernas: "R" },
+      ini: { h: [134, 52], n: [124, 62], p: [90, 95], kL: [114, 118], fL: [118, 150], kR: [76, 123], fR: [60, 150], eL: [117, 84], hL: [111, 106], eR: [124, 86], hR: [125, 108] },
+      fin: { h: [134, 52], n: [124, 62], p: [90, 95], kL: [114, 118], fL: [118, 150], kR: [76, 123], fR: [60, 150], eL: [117, 84], hL: [111, 106], eR: [102, 70], hR: [104, 92] },
     },
     elevacion_talones: {
       nombre: "Elevación de talones", musculos: "Pantorrillas", reps: "25–30", peso: "10 kg en cada mano", kg: 10,

@@ -177,7 +177,7 @@ function figura(ej) {
     el("rect", { x: -10, y: -5, width: 5, height: 10, rx: 1.5, fill: "var(--db)" }, barra);
     el("rect", { x: 5, y: -5, width: 5, height: 10, rx: 1.5, fill: "var(--db)" }, barra);
     if (largo < 0.6) el("circle", { r: 5.5, fill: "var(--db)", opacity: Math.min(1, 1.6 - largo * 2) }, g);
-    f.dbs.push({ g, lado, barra, neutro: ej.eje === "neutro" && !!ej.ladoRef });
+    f.dbs.push({ g, lado, barra, neutro: ej.eje === "neutro" && !!ej.ini3 });
   }
   if (pr.rueda) f.rueda = el("circle", { r: 8, fill: "none", stroke: "var(--db)", "stroke-width": 4 }, svg);
   f.svg = svg;
@@ -223,11 +223,14 @@ function mezclarPose(A, B, u) {
   return P;
 }
 function pintar(f, t, vuelta = 0) {
-  let P;
+  let P, P3 = null;
   if (f.ej.cuadros) { // varios cuadros seguidos (círculo, lados alternos): recorre sin volver atrás
     const c = f.ej.cuadros, v = (vuelta * 2400) / (f.ej.msVuelta || 2400);
     const x = (v % 1) * c.length, i = Math.floor(x), u = f.ej.msVuelta ? 0.5 - 0.5 * Math.cos(Math.PI * (x - i)) : x - i;
     P = mezclarPose(c[i], c[(i + 1) % c.length], u);
+  } else if (f.ej.ini3) {
+    P3 = mezclar3D(f.ej.ini3, f.ej.fin3, t);
+    P = proyectarPose(P3, f.ej.proj);
   } else P = mezclarPose(f.ej.ini, f.ej.fin, t);
   const pts = (...ks) => ks.map((k) => P[k].join(",")).join(" ");
   const ancho3d = !!P.sL;
@@ -239,15 +242,13 @@ function pintar(f, t, vuelta = 0) {
   f.hombros.setAttribute("points", ancho3d ? pts("sL", "n", "sR") : "");
   f.caderas.setAttribute("points", ancho3d ? pts("qL", "p", "qR") : "");
   f.head.setAttribute("cx", P.h[0]); f.head.setAttribute("cy", P.h[1]);
-  let Plado = null;
   for (const d of f.dbs) {
     const h = P["h" + d.lado];
     d.g.setAttribute("transform", `translate(${h[0]},${h[1]})`);
     if (!d.neutro) continue;
     // Agarre neutro: el mango cruza la palma, perpendicular al antebrazo, y gira con él (muñeca firme).
-    Plado = Plado || mezclarPose(f.ej.ladoRef.ini, f.ej.ladoRef.fin, t);
-    const e = Plado["e" + d.lado], m = Plado["h" + d.lado];
-    const fx = m[0] - e[0], fy = -(m[1] - e[1]); // antebrazo en 3D (X adelante, Y arriba)
+    const e = P3["e" + d.lado], m = P3["h" + d.lado];
+    const fx = m[0] - e[0], fy = m[1] - e[1]; // antebrazo en 3D (X adelante, Y arriba)
     const [dx, dy] = ejeEnPantalla(f.ej, [-fy, fx, 0]);
     const largo = Math.hypot(dx, dy) / (Math.hypot(fx, fy) || 1);
     d.barra.setAttribute("transform", `rotate(${(Math.atan2(dy, dx) * 180) / Math.PI}) scale(${Math.max(largo, 0.05)},1)`);
@@ -301,7 +302,8 @@ function en3Dplano(ej) {
   if (ej.otra && ej.otra.vista === "de lado" && ej.vista === "desde arriba")
     return { ini: dePose(ej.otra.ini, ej.ini), fin: dePose(ej.otra.fin, ej.fin), props: ej.otra.props || {} };
   // principal de frente: x es el lado
-  const deFrente = (pose) => { const o = {}; for (const k in pose) o[k] = [0, 150 - pose[k][1], pose[k][0] - 100]; return o; };
+  // brazos un poco adelante (plano del omóplato, como se hace de verdad), así también se ven en la vista de lado
+  const deFrente = (pose) => { const o = {}; for (const k in pose) { const Z = pose[k][0] - 100; o[k] = [/^[eh][LR]$/.test(k) ? 0.35 * Math.abs(Z) : 0, 150 - pose[k][1], Z]; } return o; };
   return { ini: deFrente(ej.ini), fin: deFrente(ej.fin), props: ej.props || {} };
 }
 
@@ -312,35 +314,6 @@ const proyectar = ([X, Y, Z]) => {
   return [100 + x2, 132 - Y * Math.cos(PITCH) + z2 * Math.sin(PITCH)];
 };
 
-function otraVista(ej) {
-  if (ej.otra) return { nombre: ej.nombre, eje: ej.eje, ...ej.otra };
-  const t = en3D(ej);
-  const pr = t.props;
-  if (ej.vista) { // principal de frente → de lado
-    const lado = (pose) => { const o = {}; for (const k in pose) o[k] = [100 + pose[k][0] + (pose[k][2] < 0 ? -1 : 1), 150 - pose[k][1]]; return o; };
-    return { nombre: ej.nombre, eje: ej.eje, vista: "de lado", props: { mancuernas: pr.mancuernas, tapete: pr.tapete }, ini: lado(t.ini), fin: lado(t.fin) };
-  }
-  const acostado = Math.abs(ej.ini.n[1] - ej.ini.p[1]) < 20;
-  const pasar = (pose) => {
-    const o = {};
-    for (const k in pose) o[k] = acostado ? [pose[k][0] + 100, 80 + pose[k][2] * 1.4] : [100 + pose[k][2], 150 - pose[k][1]];
-    return o;
-  };
-  const props = acostado
-    ? { arribaH: true, mancuernas: pr.mancuernas, rueda: pr.rueda }
-    : { mancuernas: pr.mancuernas, tapete: pr.tapete, banco: pr.banco ? [84, 32] : undefined };
-  return { nombre: ej.nombre, eje: ej.eje, vista: acostado ? "desde arriba" : "de frente", props, ini: pasar(t.ini), fin: pasar(t.fin) };
-}
-
-function vistaInclinada(ej) {
-  const t = en3D(ej), pr = t.props;
-  const pasar = (pose) => { const o = {}; for (const k in pose) o[k] = proyectar(pose[k]); return o; };
-  return {
-    nombre: ej.nombre, eje: ej.eje, vista: "desde arriba inclinada",
-    props: { mancuernas: pr.mancuernas, rueda: pr.rueda, oblicua: { tapete: !!(pr.tapete || pr.arriba), banco: pr.banco } },
-    ini: pasar(t.ini), fin: pasar(t.fin),
-  };
-}
 // Círculos de brazos: brazos estirados a los lados, las manos dibujan un círculo hacia adelante.
 function vistasCirculo(ej) {
   const r = ej.circulo.radio, N = 16;
@@ -355,31 +328,113 @@ function vistasCirculo(ej) {
   };
   return [
     ver("desde arriba inclinada", proyectar, { oblicua: {} }),
-    ver("de lado", ([X, Y]) => [100 + X, 150 - Y], {}),
+    // de lado los brazos quedan detrás del cuerpo: desde arriba se ven las manos girando adelante y atrás
+    ver("desde arriba", ([X, , Z]) => [100 + Z, 80 - X * 1.6], {}),
     ver("de frente", ([X, Y, Z]) => [100 + Z, 150 - Y], {}),
   ];
 }
-const vistasSimples = (ej) => {
-  const ref = ej.vista ? null : { ini: ej.ini, fin: ej.fin }; // postura de lado, para girar la mancuerna con el antebrazo
-  return [{ ...ej, vista: ej.vista || "de lado" }, otraVista(ej), vistaInclinada(ej)].map((v) => ({ ...v, ladoRef: ref }));
+// ---------- Movimiento en 3D ----------
+// El movimiento se calcula UNA vez en 3D (cada hueso gira desde su articulación) y cada vista solo lo proyecta.
+// Así las 3 vistas muestran siempre lo mismo y ningún hueso se encoge o pasa por el centro del cuerpo.
+const v3 = {
+  resta: (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]],
+  suma: (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]],
+  por: (a, k) => [a[0] * k, a[1] * k, a[2] * k],
+  punto: (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2],
+  cruz: (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]],
+  largo: (a) => Math.hypot(a[0], a[1], a[2]),
 };
+function girar(v, eje, ang) { // Rodrigues: gira v alrededor de eje (unitario)
+  const c = Math.cos(ang), s = Math.sin(ang);
+  return v3.suma(v3.suma(v3.por(v, c), v3.por(v3.cruz(eje, v), s)), v3.por(eje, v3.punto(eje, v) * (1 - c)));
+}
+// Gira la dirección a hacia b (las dos de largo 1) una fracción u, por el camino más corto.
+function girarHacia(a, b, u) {
+  const ang = Math.acos(Math.max(-1, Math.min(1, v3.punto(a, b))));
+  if (ang < 1e-4) return a;
+  let eje = v3.cruz(a, b);
+  const l = v3.largo(eje);
+  if (l < 1e-6) return a;
+  return girar(a, v3.por(eje, 1 / l), ang * u);
+}
+function mezclar3D(A, B, u) {
+  const P = { p: v3.suma(A.p, v3.por(v3.resta(B.p, A.p), u)) };
+  for (const k of ORDEN_HUESOS) {
+    if (!A[k] || !B[k]) continue;
+    const pa = padreDe(k, A);
+    const va = v3.resta(A[k], A[pa]), vb = v3.resta(B[k], B[pa]);
+    const ra = v3.largo(va), rb = v3.largo(vb);
+    if (ra < 1e-6 || rb < 1e-6) { P[k] = v3.suma(P[pa], v3.suma(va, v3.por(v3.resta(vb, va), u))); continue; }
+    const da = v3.por(va, 1 / ra), db = v3.por(vb, 1 / rb);
+    const ang = Math.acos(Math.max(-1, Math.min(1, v3.punto(da, db))));
+    let dir;
+    if (ang > 2.6 && k !== "n" && k !== "h") {
+      // Casi media vuelta (press de hombros, de abajo hacia arriba): el hueso pasa por un punto a SU costado
+      // (el codo izquierdo por la izquierda, el derecho por la derecha), nunca por el centro ni uno adelante y otro atrás.
+      const afuera = [0, 0, k.endsWith("L") ? -1 : 1];
+      const medio = v3.suma(v3.por(v3.suma(da, db), 0.5), afuera);
+      const m = v3.por(medio, 1 / (v3.largo(medio) || 1));
+      dir = u < 0.5 ? girarHacia(da, m, u * 2) : girarHacia(m, db, u * 2 - 1);
+    } else dir = girarHacia(da, db, u);
+    P[k] = v3.suma(P[pa], v3.por(dir, ra + (rb - ra) * u));
+  }
+  return P;
+}
+const proyectarPose = (pose, f) => Object.fromEntries(Object.entries(pose).map(([k, v]) => [k, f(v)]));
+// Una vista: postura 3D + cómo se proyecta + qué se dibuja alrededor.
+function vista3D(ej, t3, nombreVista, proj, props) {
+  return { nombre: ej.nombre, eje: ej.eje, vista: nombreVista, props, proj, ini3: t3.ini, fin3: t3.fin,
+    ini: proyectarPose(t3.ini, proj), fin: proyectarPose(t3.fin, proj) };
+}
+const PROY = {
+  lado: ([X, Y]) => [100 + X, 150 - Y],
+  frente: ([, Y, Z]) => [100 + Z, 150 - Y],
+  arribaV: ([X, , Z]) => [100 + Z, 80 + X],         // cuerpo vertical en pantalla (cabeza arriba)
+  arribaH: ([X, , Z]) => [100 + X, 80 + Z * 1.4],   // cuerpo horizontal en pantalla
+  inclinada: (p) => proyectar(p),
+};
+function vistasSimples(ej) {
+  const t3 = en3D(ej), pr = t3.props;
+  const inclinada = vista3D(ej, t3, "desde arriba inclinada", PROY.inclinada,
+    { mancuernas: pr.mancuernas, rueda: pr.rueda, oblicua: { tapete: !!(pr.tapete || pr.arriba), banco: pr.banco } });
+  // Principal
+  let principal;
+  if (!ej.vista) principal = vista3D(ej, t3, "de lado", PROY.lado, ej.props || {});
+  else if (ej.vista === "de frente") principal = vista3D(ej, t3, "de frente", PROY.frente, ej.props || {});
+  else principal = vista3D(ej, t3, "desde arriba", PROY.arribaV, ej.props || {});
+  // Otra
+  let otra;
+  if (ej.otra && !(ej.otra.vista === "de lado" && ej.vista === "desde arriba") && !(ej.otra.vista === "de frente" && !ej.vista)) {
+    otra = { nombre: ej.nombre, eje: ej.eje, ...ej.otra }; // hecha a mano, sin 3D
+  } else if (ej.otra) {
+    // la otra hecha a mano ya está dentro del 3D: se proyecta para que coincida con las demás
+    const p = ej.otra.vista === "de lado" ? PROY.lado : PROY.frente;
+    otra = vista3D(ej, t3, ej.otra.vista, p, ej.otra.props || {});
+  } else if (ej.vista) {
+    otra = vista3D(ej, t3, "de lado", PROY.lado, { mancuernas: pr.mancuernas, tapete: pr.tapete });
+  } else {
+    const acostado = ej.otraArriba || Math.abs(ej.ini.n[1] - ej.ini.p[1]) < 20;
+    otra = acostado
+      ? vista3D(ej, t3, "desde arriba", PROY.arribaH, { arribaH: true, mancuernas: pr.mancuernas, rueda: pr.rueda })
+      : vista3D(ej, t3, "de frente", PROY.frente, { mancuernas: pr.mancuernas, tapete: pr.tapete, banco: pr.banco ? [84, 32] : undefined });
+  }
+  return [principal, otra, inclinada];
+}
 // Con fin2 la figura alterna lados: centro → fin → centro → fin2 (1,6 s cada paso).
 function vistasAlternas(ej) {
   const a = vistasSimples(ej), b = vistasSimples({ ...ej, fin: ej.fin2 });
-  return a.map((v, i) => ({ ...v, cuadros: [v.ini, v.fin, v.ini, b[i].fin], msVuelta: 6400 }));
+  return a.map((v, i) => ({ ...v, ini3: null, fin3: null, cuadros: [v.ini, v.fin, v.ini, b[i].fin], msVuelta: 6400 }));
 }
 // Con pose3d (postura en 3D hecha a mano) las 3 vistas salen de la misma postura.
 function vistas3D(ej) {
-  const ver = (vista, f, props) => {
-    const pasar = (pose) => Object.fromEntries(Object.entries(pose).map(([k, v]) => [k, f(v)]));
-    return { nombre: ej.nombre, eje: ej.eje, vista, props, ini: pasar(conAncho(ej.pose3d.ini)), fin: pasar(conAncho(ej.pose3d.fin)) };
-  };
+  const t3 = { ini: conAncho(ej.pose3d.ini), fin: conAncho(ej.pose3d.fin) };
   return [
-    ver("desde arriba", ([X, , Z]) => [100 + Z, 80 + X], { arriba: true }),
-    ver("de lado", ([X, Y]) => [100 + X, 150 - Y], { tapete: true }),
-    ver("desde arriba inclinada", proyectar, { oblicua: { tapete: true } }),
+    vista3D(ej, t3, "desde arriba", PROY.arribaV, { arriba: true }),
+    vista3D(ej, t3, "de lado", PROY.lado, { tapete: true }),
+    vista3D(ej, t3, "desde arriba inclinada", PROY.inclinada, { oblicua: { tapete: true } }),
   ];
 }
+
 const vistasDe = (ej) => ej.pose3d ? vistas3D(ej) : ej.circulo ? vistasCirculo(ej) : ej.fin2 ? vistasAlternas(ej) : vistasSimples(ej);
 
 const seg = (n) => (n >= 60 ? (n % 60 ? `${Math.floor(n / 60)} min ${n % 60} s` : `${n / 60} min`) : `${n} s`);
@@ -412,7 +467,7 @@ function datosEjercicio(ej, modo) {
     const cada = /por (lado|pierna)/.exec(ej.reps);
     const reps = esc(ej.reps.replace(/ por (lado|pierna)/, "").replace(/\s*\(.*\)/, ""));
     return `<div class="escalera"><div class="et">${series} series · Mancuernas: ${esc(cuantas(ej))}</div>
-      <table>${Array.from({ length: series }, (_, i) => `<tr><td>Serie ${i + 1}</td><td><b>${kg(ej.kg)}</b></td><td><b>${reps}</b> ${/ s$/.test(reps) ? "caminando" : "repeticiones"}${cada ? " por " + cada[1] : ""}</td></tr>`).join("")}</table></div>`;
+      <table>${Array.from({ length: series }, (_, i) => `<tr><td>Serie ${i + 1}</td><td><b>${kg(ej.kg)}</b></td><td><b>${reps}</b> ${/ s$/.test(reps) ? "" : "repeticiones"}${cada ? " por " + cada[1] : ""}</td></tr>`).join("")}</table></div>`;
   }
   const filas = [["Series", series > 1 ? series : null], [modo === "dia" ? "Repeticiones" : "Cuánto", ej.reps], ["Peso", ej.peso], ["Mancuernas", cuantas(ej)]]
     .filter(([, v]) => v && v !== "—");
