@@ -99,7 +99,6 @@ button.vista { align-self: flex-start; margin: -40px 0 4px 12px; position: relat
 <nav><div class="in" role="tablist" id="tabs"></div></nav>
 <main>
   <section id="registro" hidden></section>
-  <section id="reglas" hidden></section>
 </main>
 
 <script>
@@ -425,14 +424,6 @@ function lista(sec, titulo, nota, ids, modo) {
 function renderCalentamiento() {
   lista($("#calenta"), "Calentamiento", "Antes de cada entrenamiento, unos 5 minutos, en este orden. Sin descanso entre uno y otro.", R.calentamiento, "calentamiento");
 }
-function renderEquipo() {
-  const todos = Object.keys(R.ejercicios);
-  const donde = (id) => todos.filter((k) => usa(R.ejercicios[k]).includes(id)).map((k) => R.ejercicios[k].nombre);
-  $("#equipo").innerHTML = `<h2>Mi equipo</h2><p class="small">Lo que tienes en casa y dónde se usa cada cosa.</p>
-    <div class="grid">${R.equipo.map((e) => { const w = donde(e.id); return `<div class="box" style="margin:0">
-      <h3>${e.icono} ${esc(e.nombre)}</h3><p class="small" style="margin:4px 0 8px">${esc(e.detalle)}</p>
-      ${w.length ? `<div class="small"><b>Se usa en:</b> ${w.map(esc).join(", ")}</div>` : ""}</div>`; }).join("")}</div>`;
-}
 function renderEstiramiento() {
   lista($("#estira"), "Estiramiento final", "Después de cada entrenamiento, en este orden.", R.estiramientos, "estira");
 }
@@ -541,47 +532,12 @@ function renderRegistro() {
   tabla("#tSes", D.sesiones, [["Fecha", "fecha"], ["Día", "dia"], ["Min", "minutos"], ["FC media", "fcMedia"], ["FC máx", "fcMax"], ["kcal", "kcal"], ["Nota", "nota"]]);
 }
 
-// ---------- Reglas ----------
-function renderReglas() {
-  $("#reglas").innerHTML = `<h2>Reglas</h2>
-  <div class="box aviso rojo"><h3>Presión alta</h3><ul>
-    <li><b>Nunca aguantes la respiración</b> al hacer fuerza: exhala al subir o empujar.</li>
-    <li><b>Al fallo, respirando:</b> la serie termina cuando la repetición ya no sale limpia o sientes que vas a aguantar el aire. Descansos cortos (45 s).</li>
-    <li>Dolor de pecho, mareo, falta de aire rara o dolor de cabeza fuerte: parar y consultar.</li>
-    <li>Sin caminata, las pesas hacen de cardio: descansos cortos para que el pulso no baje de 110.</li></ul></div>
-  <div class="box"><h3>Repeticiones y peso</h3><ul>
-    <li><b>Al fallo:</b> si puedes hacer más repeticiones que las de la tarjeta, hazlas. La serie termina cuando ya no sale una limpia.</li>
-    <li>Una repetición cuenta solo si la haces <b>respirando</b> y con buena postura.</li>
-    <li>Menos del mínimo del rango: la mancuerna está pesada, baja a la anterior.</li>
-    <li>Dentro del rango: sigue con esa mancuerna.</li>
-    <li>Más del máximo en todas las series: la próxima vez, sube a la siguiente mancuerna (la tarjeta dice cuál).</li>
-    <li>Ya en 10 kg (la más pesada): haz todas las que salgan, más lentas: 3 s para bajar y una pausa arriba.</li>
-    <li><b>Por qué pesos distintos:</b> los músculos grandes con el brazo doblado (remo, peso muerto) aguantan mucho más que los pequeños con el brazo estirado (aperturas, elevaciones laterales), donde la mancuerna queda lejos del hombro y pesa como si fuera más.</li></ul></div>
-  <div class="box"><h3>Orden de los entrenamientos</h3><ul>
-    <li>No van por día de la semana: se hace el que sigue (Empuje 1 → Tirón 1 → Piernas 1 → Empuje 2 → Tirón 2 → Piernas 2).</li>
-    <li>El que toca lleva un punto azul. Sale del registro: Michael le cuenta a Claude en el chat lo que entrenó y Claude lo anota.</li>
-    <li>La página no guarda nada en el navegador.</li></ul></div>
-  <div class="box aviso"><h3>Espalda baja</h3><ul>
-    <li>Columna neutra en todo: nada de redondear la espalda con peso.</li>
-    <li><b>🟨 Cinturón</b> en los ejercicios marcados en amarillo (sentadilla, peso muerto rumano, zancada, búlgara y granjero): firme pero dejándote respirar.</li>
-    <li>La rueda abdominal entra en la fase 3, de rodillas y en recorrido corto.</li>
-    <li>El banco es plástico: para sentarse o apoyarse, <b>nunca para subirse</b>.</li></ul></div>
-  <div class="box"><h3>Zonas de pulso (Mi Band)</h3><p class="small">Pulso máximo estimado: 185 lpm (220 − 35).</p><ul>
-    <li>Durante las pesas: <b>110–130 lpm</b> (60–70 %). La banda se inicia al empezar el calentamiento y se detiene al terminar el estiramiento.</li>
-    <li>No pasar de <b>150 lpm</b> (80 %) mientras la presión esté alta.</li>
-    <li>Si el médico te receta pastillas para la presión, algunas bajan el pulso: avisa para ajustar las zonas.</li></ul></div>
-  <div class="box"><h3>Comida</h3><ul>
-    <li>Menos sal: nada de embutidos, sopas de sobre ni snacks salados. Es lo que más ayuda a la presión.</li>
-    <li>El plan de comidas lo confirma el médico o un nutricionista.</li></ul></div>
-  <div class="box"><h3>Fases</h3><ul>${R.fases.map((f) => `<li><b>${esc(f.nombre)}</b> (semanas ${f.semanas[0]}–${f.semanas[1] > 50 ? "…" : f.semanas[1]}): ${f.series} series. ${esc(f.nota)}</li>`).join("")}</ul></div>`;
-}
-
 // ---------- Pestañas ----------
 // Los 6 días arriba, en orden: Michael entrena el que sigue, sin importar el día de la semana.
 // Registro va primero y es lo que se abre (Michael, 15/11/2026).
-const TABS = (D ? [["registro", "Registro"]] : []).concat([["calenta", "Calentamiento"]]).concat(ORDEN.map((k) => [k, R.dias[k].nombre]), [["estira", "Estiramiento"], ["equipo", "Mi equipo"], ["reglas", "Reglas"]]);
+const TABS = (D ? [["registro", "Registro"]] : []).concat([["calenta", "Calentamiento"]]).concat(ORDEN.map((k) => [k, R.dias[k].nombre]), [["estira", "Estiramiento"]]);
 const main = $("main");
-["calenta"].concat(ORDEN, ["estira", "equipo"]).reverse().forEach((id) => main.insertAdjacentHTML("afterbegin", `<section id="${id}" hidden></section>`));
+["calenta"].concat(ORDEN, ["estira"]).reverse().forEach((id) => main.insertAdjacentHTML("afterbegin", `<section id="${id}" hidden></section>`));
 $("#tabs").innerHTML = TABS.map(([id, n]) => `<button role="tab" id="tab-${id}">${n}</button>`).join("");
 TABS.forEach(([id]) => ($("#tab-" + id).onclick = () => { mostrar(id); scrollTo(0, 0); }));
 function mostrar(id) {
@@ -597,13 +553,11 @@ function renderTodo() {
   });
   renderCalentamiento();
   renderEstiramiento();
-  renderEquipo();
 }
 
 
 renderTodo();
 if (D) renderRegistro();
-renderReglas();
 mostrar(D ? "registro" : siguiente());
 if (quieto) figuras.forEach((f) => pintar(f, 1)); else requestAnimationFrame(animar);
 </script>
