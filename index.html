@@ -1,72 +1,611 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PlanCo | Centro PWA</title>
-  <style>
-    :root {
-      --lime: #b8eb5b;
-      --ink: #121722;
-      --muted: #5f6675;
-      --line: #d9d9d9;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 20px;
-      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
-      color: var(--ink);
-      background: radial-gradient(circle at 20% 20%, #c7ef77 0%, var(--lime) 62%, #abd74d 100%);
-    }
-
-    .home {
-      width: 100%;
-      max-width: 760px;
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 22px;
-      box-shadow: 0 10px 28px rgba(15, 21, 33, .14);
-    }
-
-    h1 { margin: 0 0 6px; font-size: 30px; }
-    p { margin: 0 0 16px; color: var(--muted); }
-
-    .actions { display: flex; flex-wrap: wrap; gap: 10px; }
-
-    .btn {
-      text-decoration: none;
-      border: 1px solid #d0d0d0;
-      border-radius: 9px;
-      padding: 11px 14px;
-      font-size: 14px;
-      font-weight: 700;
-      color: #121722;
-      background: #fff;
-    }
-
-    .btn.primary {
-      background: #11151d;
-      border-color: #11151d;
-      color: #fff;
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entrenamiento de Michael</title>
+<script src="datos/rutina.js"></script>
+<style>
+:root {
+  --bg: #f6f5f2; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --ink-3: #8a8983;
+  --line: #e4e2dc; --accent: #2a78d6; --accent-soft: #e6f0fb;
+  --s1: #2a78d6; --s2: #eb6834;
+  --good: #0ca30c; --warning: #fab219; --serious: #ec835a; --critical: #d03b3b;
+  --fig: #1f1f1d; --fig-far: #a9a8a2; --prop: #c9c6bd; --mat: #9ec5f4; --db: #3a3a37;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121211; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --ink-3: #8f8e86;
+    --line: #2e2e2b; --accent: #3987e5; --accent-soft: #1b2a3d;
+    --s1: #3987e5; --s2: #d95926;
+    --fig: #f0efec; --fig-far: #6d6c66; --prop: #4a4945; --mat: #184f95; --db: #c3c2b7;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121211; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --ink-3: #8f8e86;
+  --line: #2e2e2b; --accent: #3987e5; --accent-soft: #1b2a3d;
+  --s1: #3987e5; --s2: #d95926;
+  --fig: #f0efec; --fig-far: #6d6c66; --prop: #4a4945; --mat: #184f95; --db: #c3c2b7;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+header { padding: 20px 16px 8px; max-width: 1100px; margin: 0 auto; }
+h1 { font-size: 1.5rem; margin: 0; }
+.sub { color: var(--ink-2); margin: 2px 0 0; }
+nav { position: sticky; top: 0; z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+nav .in { max-width: 1100px; margin: 0 auto; padding: 0 16px; display: flex; gap: 4px; overflow-x: auto; }
+nav button { flex: none; border: 0; background: none; color: var(--ink-2); font: inherit; padding: 12px 12px; cursor: pointer; border-bottom: 2px solid transparent; }
+nav button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); font-weight: 600; }
+main { max-width: 1100px; margin: 0 auto; padding: 16px; }
+section[hidden] { display: none; }
+h2 { font-size: 1.25rem; margin: 8px 0 12px; }
+h3 { font-size: 1.05rem; margin: 0; }
+.box { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+.aviso { border-left: 4px solid var(--warning); }
+.aviso.rojo { border-left-color: var(--critical); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
+.card svg.fig { display: block; width: 100%; height: auto; background: var(--accent-soft); }
+.card .body { padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.num { display: inline-flex; width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: #fff; font-size: .8rem; align-items: center; justify-content: center; margin-right: 6px; vertical-align: 2px; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: .8rem; padding: 2px 8px; border-radius: 999px; background: var(--bg); border: 1px solid var(--line); color: var(--ink-2); }
+.chip b { color: var(--ink); }
+ol, ul { margin: 0; padding-left: 20px; }
+.small { font-size: .9rem; color: var(--ink-2); }
+.tip { font-size: .9rem; } .tip b { color: var(--ink); }
+.tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; }
+.tile .k { font-size: .85rem; color: var(--ink-2); }
+.tile .v { font-size: 1.6rem; font-weight: 650; font-variant-numeric: tabular-nums; }
+.tile .d { font-size: .85rem; color: var(--ink-2); display: flex; align-items: center; gap: 6px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+th { color: var(--ink-2); font-weight: 600; }
+.scroll { overflow-x: auto; }
+.chart { position: relative; }
+.chart svg { width: 100%; height: auto; display: block; }
+.legend { display: flex; gap: 16px; font-size: .85rem; color: var(--ink-2); margin-bottom: 4px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.tt { position: absolute; pointer-events: none; background: var(--ink); color: var(--surface); font-size: .8rem; padding: 4px 8px; border-radius: 6px; white-space: nowrap; transform: translate(-50%, -120%); display: none; }
+.vacio { color: var(--ink-3); font-style: italic; }
+.datos { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 4px 20px; margin: 0; }
+.datos dt { font-size: .75rem; color: var(--ink-2); }
+.datos dd { margin: 0; font-weight: 600; }
+.escalera .et { font-weight: 600; font-size: .9rem; margin-bottom: 4px; }
+.escalera table { width: auto; }
+.escalera td { padding: 3px 12px 3px 0; }
+.cinturon { align-self: flex-start; font-weight: 700; font-size: .9rem; padding: 4px 10px; border-radius: 8px; background: #fff3cf; color: #5c4300; border: 1px solid var(--warning); }
+.card.con-cinturon { border: 2px solid var(--warning); }
+.cinturon-box { border: 2px solid var(--warning); }
+nav button.toca::after { content: " •"; color: var(--accent); font-weight: 700; }
+.fin { margin: 20px 0; }
+.card.futuro { opacity: .55; }
+.btn { font: inherit; font-weight: 600; padding: 10px 18px; border-radius: 10px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+button.vista { align-self: flex-start; margin: -40px 0 4px 12px; position: relative; font: inherit; font-size: .8rem; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.descanso { font-size: .9rem; background: var(--accent-soft); border-radius: 8px; padding: 6px 10px; }
+.small a { color: var(--accent); }
+.usa { display: flex; flex-wrap: wrap; gap: 6px; font-size: .85rem; color: var(--ink-2); align-items: center; }
+.usa span { background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 2px 8px; color: var(--ink); }
+.bloqueado { font-weight: 600; font-size: .9rem; padding: 6px 10px; border-radius: 8px; border: 1px dashed var(--ink-3); }
+@media (max-width: 520px) { .grid { grid-template-columns: 1fr; } </style>
 </head>
 <body>
-  <main class="home">
-    <h1>PlanCo Mockups</h1>
-    <p>Accesos directos a planificación y pantallas navegables.</p>
+<header>
+  <h1>Entrenamiento de Michael</h1>
+  <p class="sub" id="estado"></p>
+</header>
+<nav><div class="in" role="tablist" id="tabs"></div></nav>
+<main>
+  <section id="registro" hidden></section>
+  <section id="reglas" hidden></section>
+</main>
 
-    <div class="actions">
-      <a class="btn" href="fases.html">Fases</a>
-      <a class="btn primary" href="screens/index.html">Mockups</a>
+<script>
+// Sin datos/registro.js (la copia pública en view/) la página funciona igual, sin la pestaña Registro.
+const R = window.RUTINA, D = window.REGISTRO || null;
+const DIAS = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+const ESTATURA = 1.64;
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const fechaISO = (d) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+const fechaCorta = (iso) => { const [y, m, d] = iso.split("-"); return d + "/" + m; };
+
+// ---------- Semana y fase ----------
+const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+const inicio = new Date(R.inicio + "T00:00:00");
+const diasDesde = Math.floor((hoy - inicio) / 86400000);
+const semana = diasDesde < 0 ? 1 : Math.floor(diasDesde / 7) + 1;
+const fase = R.fases.find((f) => semana >= f.semanas[0] && semana <= f.semanas[1]);
+
+// ---------- Figura animada ----------
+const NS = "http://www.w3.org/2000/svg";
+const figuras = [];
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function figura(ej) {
+  const svg = el("svg", { viewBox: "0 0 200 160", class: "fig", role: "img", "aria-label": ej.nombre });
+  const pr = ej.props || {};
+  if (pr.pared) el("rect", { x: pr.pared, y: 10, width: 6, height: 140, fill: "var(--prop)" }, svg);
+  if (pr.arriba) el("rect", { x: 58, y: 6, width: 84, height: 148, rx: 4, fill: "var(--mat)", opacity: 0.6 }, svg);
+  else if (pr.arribaH) el("rect", { x: 10, y: 44, width: 180, height: 72, rx: 4, fill: "var(--mat)", opacity: 0.6 }, svg);
+  else if (pr.oblicua) {
+    const pol = (pts, attrs) => el("polygon", { points: pts.map((q) => proyectar(q).join(",")).join(" "), ...attrs }, svg);
+    pol([[-95, 0, -40], [95, 0, -40], [95, 0, 40], [-95, 0, 40]], { fill: "var(--prop)", opacity: 0.35 });
+    if (pr.oblicua.tapete) pol([[-86, 0, -24], [86, 0, -24], [86, 0, 24], [-86, 0, 24]], { fill: "var(--mat)", opacity: 0.8 });
+    if (pr.oblicua.banco) {
+      const [bx, bw] = pr.oblicua.banco, x0 = bx - 100, x1 = x0 + bw;
+      for (const [X, Z] of [[x0, -14], [x1, -14], [x0, 14], [x1, 14]]) {
+        const [a1, b1] = proyectar([X, 0, Z]), [a2, b2] = proyectar([X, 37, Z]);
+        el("line", { x1: a1, y1: b1, x2: a2, y2: b2, stroke: "var(--prop)", "stroke-width": 4 }, svg);
+      }
+      pol([[x0, 37, -14], [x1, 37, -14], [x1, 37, 14], [x0, 37, 14]], { fill: "var(--prop)" });
+    }
+  }
+  else el("line", { x1: 0, y1: 150.5, x2: 200, y2: 150.5, stroke: "var(--prop)", "stroke-width": 1 }, svg);
+  if (pr.tapete) el("rect", { x: 14, y: 147, width: 172, height: 3.5, rx: 1.5, fill: "var(--mat)" }, svg);
+  if (pr.banco) {
+    const [x, w] = pr.banco;
+    el("rect", { x, y: 113, width: w, height: 6, rx: 2, fill: "var(--prop)" }, svg);
+    el("rect", { x: x + 2, y: 118, width: 4, height: 32, fill: "var(--prop)" }, svg);
+    el("rect", { x: x + w - 6, y: 118, width: 4, height: 32, fill: "var(--prop)" }, svg);
+  }
+  const lejos = { stroke: "var(--fig-far)", "stroke-width": 5, "stroke-linecap": "round", "stroke-linejoin": "round", fill: "none" };
+  const cerca = { ...lejos, stroke: "var(--fig)" };
+  const f = {
+    legL: el("polyline", lejos, svg), armL: el("polyline", lejos, svg),
+    torso: el("polyline", cerca, svg), legR: el("polyline", cerca, svg),
+    head: el("circle", { r: 9, fill: "var(--fig)" }, svg), armR: el("polyline", cerca, svg),
+    dbs: [], rueda: null, ej,
+  };
+  const m = pr.mancuernas || "";
+  // La barra apunta en la misma dirección real en todas las vistas; de punta se ve el disco.
+  const [dx, dy] = ejeEnPantalla(ej), largo = Math.hypot(dx, dy), giro = (Math.atan2(dy, dx) * 180) / Math.PI;
+  for (const lado of m) {
+    const g = el("g", {}, svg);
+    const barra = el("g", { transform: `rotate(${giro}) scale(${Math.max(largo, 0.05)},1)` }, g);
+    el("rect", { x: -9, y: -1.5, width: 18, height: 3, fill: "var(--db)" }, barra);
+    el("rect", { x: -10, y: -5, width: 5, height: 10, rx: 1.5, fill: "var(--db)" }, barra);
+    el("rect", { x: 5, y: -5, width: 5, height: 10, rx: 1.5, fill: "var(--db)" }, barra);
+    if (largo < 0.6) el("circle", { r: 5.5, fill: "var(--db)", opacity: Math.min(1, 1.6 - largo * 2) }, g);
+    f.dbs.push({ g, lado });
+  }
+  if (pr.rueda) f.rueda = el("circle", { r: 8, fill: "none", stroke: "var(--db)", "stroke-width": 4 }, svg);
+  f.svg = svg;
+  figuras.push(f);
+  pintar(f, 0);
+  return svg;
+}
+// Dirección en pantalla del eje de la mancuerna para la vista que se dibuja.
+const EJES = { X: [1, 0, 0], Y: [0, 1, 0], Z: [0, 0, 1] };
+function ejeEnPantalla(src) {
+  const [X, Y, Z] = EJES[src.eje || "Z"], pr = src.props || {};
+  if (pr.oblicua) { const a = proyectar([X, Y, Z]), o = proyectar([0, 0, 0]); return [a[0] - o[0], a[1] - o[1]]; }
+  if (pr.arriba) return [Z, X];   // desde arriba, cuerpo vertical (cabeza arriba)
+  if (pr.arribaH) return [X, Z];  // desde arriba, cuerpo horizontal
+  if (src.vista === "de frente") return [Z, -Y];
+  return [X, -Y];                 // de lado
+}
+const mezcla = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+function pintar(f, t, vuelta = 0) {
+  const P = {};
+  if (f.ej.cuadros) { // movimiento en círculo: recorre los cuadros sin volver atrás
+    const c = f.ej.cuadros, x = (vuelta % 1) * c.length, i = Math.floor(x), u = x - i;
+    for (const k in c[i]) P[k] = mezcla(c[i][k], c[(i + 1) % c.length][k], u);
+  } else for (const k in f.ej.ini) P[k] = mezcla(f.ej.ini[k], f.ej.fin[k], t);
+  const pts = (...ks) => ks.map((k) => P[k].join(",")).join(" ");
+  f.legL.setAttribute("points", pts("p", "kL", "fL"));
+  f.legR.setAttribute("points", pts("p", "kR", "fR"));
+  f.armL.setAttribute("points", pts("n", "eL", "hL"));
+  f.armR.setAttribute("points", pts("n", "eR", "hR"));
+  f.torso.setAttribute("points", pts("h", "n", "p"));
+  f.head.setAttribute("cx", P.h[0]); f.head.setAttribute("cy", P.h[1]);
+  for (const d of f.dbs) { const h = P["h" + d.lado]; d.g.setAttribute("transform", `translate(${h[0]},${h[1]})`); }
+  if (f.rueda) { f.rueda.setAttribute("cx", P.hR[0]); f.rueda.setAttribute("cy", f.ej.props && (f.ej.props.arribaH || f.ej.props.oblicua) ? P.hR[1] : 142); }
+}
+const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function animar(ms) {
+  const t = 0.5 - 0.5 * Math.cos((ms / 3200) * 2 * Math.PI); // ~1,6 s bajar, 1,6 s subir
+  for (const f of figuras) if (f.svg.isConnected && f.svg.getBoundingClientRect().width) pintar(f, t, ms / 2400);
+  requestAnimationFrame(animar);
+}
+
+// ---------- Otra vista ----------
+// Si el ejercicio no trae `otra` hecha a mano, se calcula: de frente si está de pie o sentado,
+// desde arriba si está acostado o en cuatro apoyos. `otra: false` = sin botón.
+const ANCHO = { h: 0, n: 0, p: 0, kL: -8, fL: -10, kR: 8, fR: 10, eL: -14, hL: -16, eR: 14, hR: 16 };
+// Cada ejercicio tiene 3 vistas: la principal, otra (hecha a mano en `otra` o calculada)
+// y una desde arriba inclinada (3/4), calculada en 3D.
+const ancho = (ej, k) => (ej.lado && ej.lado[k] != null ? ej.lado[k] : ej.juntas && /^h[LR]$/.test(k) ? 0 : ej.juntas && /^e[LR]$/.test(k) ? ANCHO[k] / 2 : ANCHO[k]);
+
+// Posturas 3D [X adelante, Y alto, Z lado] a partir de lo que trae el ejercicio.
+function en3D(ej) {
+  const dePose = (lado, arriba) => {
+    const o = {};
+    for (const k in lado) {
+      const Z = arriba ? arriba[k][0] - 100 : ancho(ej, k);
+      o[k] = [lado[k][0] - 100, 150 - lado[k][1], Z];
+    }
+    return o;
+  };
+  if (!ej.vista && ej.otra && ej.otra.vista === "de frente") {
+    const mezclar = (lado, frente) => { const o = {}; for (const k in lado) o[k] = [lado[k][0] - 100, 150 - frente[k][1], frente[k][0] - 100]; return o; };
+    return { ini: mezclar(ej.ini, ej.otra.ini), fin: mezclar(ej.fin, ej.otra.fin), props: ej.props || {} };
+  }
+  if (!ej.vista) return { ini: dePose(ej.ini), fin: dePose(ej.fin), props: ej.props || {} };
+  if (ej.otra && ej.otra.vista === "de lado" && ej.vista === "desde arriba")
+    return { ini: dePose(ej.otra.ini, ej.ini), fin: dePose(ej.otra.fin, ej.fin), props: ej.otra.props || {} };
+  // principal de frente: x es el lado
+  const deFrente = (pose) => { const o = {}; for (const k in pose) o[k] = [0, 150 - pose[k][1], pose[k][0] - 100]; return o; };
+  return { ini: deFrente(ej.ini), fin: deFrente(ej.fin), props: ej.props || {} };
+}
+
+const YAW = (38 * Math.PI) / 180, PITCH = (30 * Math.PI) / 180;
+const proyectar = ([X, Y, Z]) => {
+  const x2 = X * Math.cos(YAW) + Z * Math.sin(YAW);
+  const z2 = -X * Math.sin(YAW) + Z * Math.cos(YAW);
+  return [100 + x2, 132 - Y * Math.cos(PITCH) + z2 * Math.sin(PITCH)];
+};
+
+function otraVista(ej) {
+  if (ej.otra) return { nombre: ej.nombre, eje: ej.eje, ...ej.otra };
+  const t = en3D(ej);
+  const pr = t.props;
+  if (ej.vista) { // principal de frente → de lado
+    const lado = (pose) => { const o = {}; for (const k in pose) o[k] = [100 + pose[k][0] + (pose[k][2] < 0 ? -1 : 1), 150 - pose[k][1]]; return o; };
+    return { nombre: ej.nombre, eje: ej.eje, vista: "de lado", props: { mancuernas: pr.mancuernas, tapete: pr.tapete }, ini: lado(t.ini), fin: lado(t.fin) };
+  }
+  const acostado = Math.abs(ej.ini.n[1] - ej.ini.p[1]) < 20;
+  const pasar = (pose) => {
+    const o = {};
+    for (const k in pose) o[k] = acostado ? [pose[k][0] + 100, 80 + pose[k][2] * 1.4] : [100 + pose[k][2], 150 - pose[k][1]];
+    return o;
+  };
+  const props = acostado
+    ? { arribaH: true, mancuernas: pr.mancuernas, rueda: pr.rueda }
+    : { mancuernas: pr.mancuernas, tapete: pr.tapete, banco: pr.banco ? [84, 32] : undefined };
+  return { nombre: ej.nombre, eje: ej.eje, vista: acostado ? "desde arriba" : "de frente", props, ini: pasar(t.ini), fin: pasar(t.fin) };
+}
+
+function vistaInclinada(ej) {
+  const t = en3D(ej), pr = t.props;
+  const pasar = (pose) => { const o = {}; for (const k in pose) o[k] = proyectar(pose[k]); return o; };
+  return {
+    nombre: ej.nombre, eje: ej.eje, vista: "desde arriba inclinada",
+    props: { mancuernas: pr.mancuernas, rueda: pr.rueda, oblicua: { tapete: !!(pr.tapete || pr.arriba), banco: pr.banco } },
+    ini: pasar(t.ini), fin: pasar(t.fin),
+  };
+}
+// Círculos de brazos: brazos estirados a los lados, las manos dibujan un círculo hacia adelante.
+function vistasCirculo(ej) {
+  const r = ej.circulo.radio, N = 16;
+  const base = { h: [0, 122, 0], n: [0, 108, 0], p: [0, 60, 0], kL: [0, 30, -8], fL: [0, 0, -10], kR: [0, 30, 8], fR: [0, 0, 10] };
+  const c3 = Array.from({ length: N }, (_, i) => {
+    const a = (i / N) * 2 * Math.PI, X = r * Math.cos(a), Y = 108 + r * Math.sin(a);
+    return { ...base, hL: [X, Y, -36], eL: [X / 2, (108 + Y) / 2, -18], hR: [X, Y, 36], eR: [X / 2, (108 + Y) / 2, 18] };
+  });
+  const ver = (vista, f, props) => {
+    const cuadros = c3.map((c) => Object.fromEntries(Object.entries(c).map(([k, v]) => [k, f(v)])));
+    return { nombre: ej.nombre, vista, props, cuadros, ini: cuadros[0], fin: cuadros[0] };
+  };
+  return [
+    ver("desde arriba inclinada", proyectar, { oblicua: {} }),
+    ver("de lado", ([X, Y]) => [100 + X, 150 - Y], {}),
+    ver("de frente", ([X, Y, Z]) => [100 + Z, 150 - Y], {}),
+  ];
+}
+const vistasDe = (ej) => ej.circulo ? vistasCirculo(ej) : [{ ...ej, vista: ej.vista || "de lado" }, otraVista(ej), vistaInclinada(ej)];
+
+const seg = (n) => (n >= 60 ? (n % 60 ? `${Math.floor(n / 60)} min ${n % 60} s` : `${n / 60} min`) : `${n} s`);
+
+// ---------- Equipo ----------
+const EQ = Object.fromEntries(R.equipo.map((e) => [e.id, e]));
+function usa(ej) {
+  const pr = ej.props || {}, u = [];
+  if (pr.mancuernas) u.push("mancuernas");
+  if (pr.banco) u.push("banco");
+  if (pr.tapete || pr.arriba) u.push("alfombra");
+  if (ej.cinturon) u.push("cinturon");
+  if (pr.rueda) u.push("rueda");
+  return u;
+}
+const cuantas = (ej) => ej.mancuerna || ((ej.props || {}).mancuernas === "LR" ? "2, una en cada mano" : null);
+
+// ---------- Tarjetas ----------
+const kg = (n) => String(n).replace(".", ",") + " kg";
+function datosEjercicio(ej, modo) {
+  const series = ej.series || (fase ? fase.series : 3);
+  if (ej.escalera) {
+    const lado = /por lado/.test(ej.reps) ? " por lado" : "";
+    return `<div class="escalera"><div class="et">Escalera de Michael · ${R.escalones.length} series</div>
+      <table>${R.escalones.map(([peso, reps], i) => `<tr><td>Serie ${i + 1}</td><td><b>${kg(peso)}</b></td><td><b>${reps}</b> repeticiones${lado}</td></tr>`).join("")}</table>
+      <div class="small">Mancuernas: <b>${esc(cuantas(ej))}</b></div></div>`;
+  }
+  if (ej.kg && modo === "dia") {
+    const max = (ej.reps.match(/\d+\D+(\d+)/) || ej.reps.match(/(\d+)/))[1];
+    const cada = /por (lado|pierna)/.exec(ej.reps);
+    const reps = esc(ej.reps.replace(/ por (lado|pierna)/, "").replace(/\s*\(.*\)/, ""));
+    return `<div class="escalera"><div class="et">${series} series · Mancuernas: ${esc(cuantas(ej))}</div>
+      <table>${Array.from({ length: series }, (_, i) => `<tr><td>Serie ${i + 1}</td><td><b>${kg(ej.kg)}</b></td><td><b>${reps}</b> ${/ s$/.test(reps) ? "caminando" : "repeticiones"}${cada ? " por " + cada[1] : ""}</td></tr>`).join("")}</table>
+      ${ej.sube ? `<div class="small">Al fallo. Cuando pases de <b>${max}</b> en todas las series, sube a <b>${kg(ej.sube)}</b>.</div>` : `<div class="small">Al fallo. ${kg(ej.kg)} es la más pesada que tienes: si pasas de ${max}, haz las repeticiones más lentas.</div>`}</div>`;
+  }
+  const filas = [["Series", series > 1 ? series : null], [modo === "dia" ? "Repeticiones" : "Cuánto", ej.reps], ["Peso", ej.peso], ["Mancuernas", cuantas(ej)]]
+    .filter(([, v]) => v && v !== "—");
+  return `<dl class="datos">${filas.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>`;
+}
+function descansoDe(ej) {
+  if (ej.escalera) return { s: R.descansoEscalera, txt: `Entre series: solo cambiar de mancuerna (unos ${R.descansoEscalera} s). Entre un lado y otro, sin descanso.` };
+  const s = fase ? fase.descanso : 45;
+  return { s, txt: `Entre series: <b>${seg(s)}</b>.` };
+}
+// modo: "dia" (entrenamiento, con descanso), "calentamiento" o "estira"
+function tarjeta(id, i, modo) {
+  const ej = R.ejercicios[id];
+  const card = document.createElement("article");
+  card.className = "card" + (ej.cinturon ? " con-cinturon" : "");
+  const vistas = vistasDe(ej);
+  let svg = figura(vistas[0]);
+  card.appendChild(svg);
+  {
+    let v = 0;
+    const b = document.createElement("button");
+    b.className = "vista";
+    const etiqueta = () => (b.textContent = `🔄 Ver ${vistas[(v + 1) % vistas.length].vista} (${v + 1}/${vistas.length})`);
+    etiqueta();
+    b.onclick = () => {
+      v = (v + 1) % vistas.length;
+      const nuevo = figura(vistas[v]);
+      svg.replaceWith(nuevo);
+      svg = nuevo;
+      etiqueta();
+    };
+    card.appendChild(b);
+  }
+  const body = document.createElement("div");
+  body.className = "body";
+  const bloqueado = !!(ej.fase && (!fase || fase.n < ej.fase));
+  if (bloqueado) card.classList.add("futuro");
+  const d = modo === "dia" && !bloqueado ? descansoDe(ej) : null;
+  body.innerHTML = `
+    <h3><span class="num">${i + 1}</span>${esc(ej.nombre)}</h3>
+    ${ej.cinturon ? `<div class="cinturon">🟨 Con cinturón</div>` : ""}
+    ${bloqueado ? `<div class="bloqueado">🔒 Desde la semana ${R.fases.find((f) => f.n === ej.fase).semanas[0]} (fase ${ej.fase}). Hasta entonces, sáltalo.</div>` : ""}
+    <div class="small">${esc(ej.musculos)}${ej.vista ? " · figura vista " + esc(ej.vista) : ""}</div>
+    ${usa(ej).length ? `<div class="usa">Usas: ${usa(ej).map((k) => `<span>${EQ[k].icono} ${esc(EQ[k].nombre)}</span>`).join("")}</div>` : `<div class="usa">Usas: <span>nada, solo el cuerpo</span></div>`}
+    ${datosEjercicio(ej, modo)}
+    ${d ? `<div class="descanso">${d.txt}</div>` : ""}
+    <ol>${ej.pasos.map((p) => `<li>${esc(p)}</li>`).join("")}</ol>
+    <div class="tip"><b>Respira:</b> ${esc(ej.respira)}</div>
+    <div class="tip"><b>Cuidado:</b> ${esc(ej.cuidado)}</div>`;
+  card.appendChild(body);
+  return card;
+}
+const ejerciciosDe = (dia) => R.dias[dia].ejercicios; // los de fases futuras salen con candado
+
+// ---------- Orden de los días (no depende del día de la semana) ----------
+const ORDEN = Object.keys(R.dias);
+// La página no guarda nada: el último entrenamiento sale de datos/registro.js (sesiones), que anota Claude.
+const ultimoDia = () => !D ? null : [...D.sesiones].reverse().find((x) => ORDEN.includes(x.dia)) || null; // { fecha, dia, ... }
+const siguiente = () => { const u = ultimoDia(); return u && ORDEN.includes(u.dia) ? ORDEN[(ORDEN.indexOf(u.dia) + 1) % ORDEN.length] : ORDEN[0]; };
+
+function rutinaDia(sec, dia) {
+  const d = R.dias[dia], u = ultimoDia(), toca = siguiente() === dia;
+  const usaCinturon = ejerciciosDe(dia).filter((id) => R.ejercicios[id].cinturon).map((id) => R.ejercicios[id].nombre);
+  sec.innerHTML = `
+    <h2>${esc(d.nombre)} · ${esc(d.musculos)}</h2>
+    <p class="small">${toca ? "<b>Te toca este.</b> " : ""}${u ? "Último entrenamiento: " + esc(R.dias[u.dia].nombre) + " el " + fechaCorta(u.fecha) + ". " : (D ? "Aún no hay entrenamientos anotados. " : "")}${fase ? esc(fase.nombre) + ". " + esc(fase.nota) : ""}</p>
+    <div class="box aviso"><h3>Para de inmediato si sientes</h3>
+      <p class="small" style="margin:4px 0 0">Dolor de pecho, mareo, falta de aire fuera de lo normal o dolor de cabeza fuerte. Ese día no sigas y consulta al médico.</p></div>
+    <div class="box"><h3>Orden</h3><p class="small" style="margin:4px 0 0">
+      1. <a href="#" data-ir="calenta">Calentamiento</a> (5 min) → 2. estos ejercicios → 3. <a href="#" data-ir="estira">Estiramiento</a>.<br>
+      Descanso entre series: <b>${seg(fase ? fase.descanso : 45)}</b> (en la Escalera, solo cambiar de mancuerna). Entre un ejercicio y otro: <b>${seg(R.entreEjercicios)}</b>.</p></div>
+    ${usaCinturon.length ? `<div class="box cinturon-box"><h3>🟨 Hoy usas cinturón en: ${usaCinturon.map(esc).join(", ")}</h3>
+      <p class="small" style="margin:4px 0 0">${esc(R.cinturon)}</p></div>` : ""}`;
+  sec.querySelectorAll("[data-ir]").forEach((a) => (a.onclick = (e) => { e.preventDefault(); mostrar(a.dataset.ir); scrollTo(0, 0); }));
+  const g = document.createElement("div");
+  g.className = "grid";
+  ejerciciosDe(dia).forEach((id, i) => g.appendChild(tarjeta(id, i, "dia", dia)));
+  sec.appendChild(g);
+  sec.insertAdjacentHTML("beforeend", `<p class="small fin">Al terminar: <a href="#" data-ir2="estira">Estiramiento</a>. Después cuéntale a Claude en el chat qué hiciste (o pásale la captura de la Mi Band) y lo anota.</p>`);
+  sec.querySelector("[data-ir2]").onclick = (e) => { e.preventDefault(); mostrar("estira"); scrollTo(0, 0); };
+}
+
+function lista(sec, titulo, nota, ids, modo) {
+  sec.innerHTML = `<h2>${titulo}</h2><p class="small">${nota}</p>`;
+  const g = document.createElement("div");
+  g.className = "grid";
+  ids.forEach((id, i) => g.appendChild(tarjeta(id, i, modo)));
+  sec.appendChild(g);
+}
+function renderCalentamiento() {
+  lista($("#calenta"), "Calentamiento", "Antes de cada entrenamiento, unos 5 minutos, en este orden. Sin descanso entre uno y otro.", R.calentamiento, "calentamiento");
+}
+function renderEquipo() {
+  const todos = Object.keys(R.ejercicios);
+  const donde = (id) => todos.filter((k) => usa(R.ejercicios[k]).includes(id)).map((k) => R.ejercicios[k].nombre);
+  $("#equipo").innerHTML = `<h2>Mi equipo</h2><p class="small">Lo que tienes en casa y dónde se usa cada cosa.</p>
+    <div class="grid">${R.equipo.map((e) => { const w = donde(e.id); return `<div class="box" style="margin:0">
+      <h3>${e.icono} ${esc(e.nombre)}</h3><p class="small" style="margin:4px 0 8px">${esc(e.detalle)}</p>
+      ${w.length ? `<div class="small"><b>Se usa en:</b> ${w.map(esc).join(", ")}</div>` : ""}</div>`; }).join("")}</div>`;
+}
+function renderEstiramiento() {
+  lista($("#estira"), "Estiramiento final", "Después de cada entrenamiento, en este orden.", R.estiramientos, "estira");
+}
+
+// ---------- Registro ----------
+function catPresion(s, d) {
+  if (s >= 180 || d >= 120) return ["Crisis: llamar al médico", "var(--critical)"];
+  if (s >= 140 || d >= 90) return ["Presión alta grado 2", "var(--critical)"];
+  if (s >= 130 || d >= 80) return ["Presión alta grado 1", "var(--serious)"];
+  if (s >= 120) return ["Elevada", "var(--warning)"];
+  return ["Normal", "var(--good)"];
+}
+function catIMC(b) {
+  if (b >= 30) return ["Obesidad", "var(--serious)"];
+  if (b >= 25) return ["Sobrepeso", "var(--warning)"];
+  if (b >= 18.5) return ["Normal", "var(--good)"];
+  return ["Bajo", "var(--warning)"];
+}
+function ultimo(lista, campo) { for (let i = lista.length - 1; i >= 0; i--) if (lista[i][campo] != null) return lista[i]; return null; }
+
+function grafico(cont, { series, refs = [], unidad, pad = 5 }) {
+  const W = 640, H = 240, L = 40, Rr = 70, T = 12, B = 28;
+  const todos = series.flatMap((s) => s.puntos);
+  if (!todos.length) { cont.innerHTML = `<p class="vacio">Aún no hay datos.</p>`; return; }
+  const xs = todos.map((p) => +new Date(p.x));
+  let x0 = Math.min(...xs), x1 = Math.max(...xs);
+  if (x0 === x1) { x0 -= 3 * 864e5; x1 += 3 * 864e5; }
+  const ys = todos.map((p) => p.y).concat(refs.map((r) => r.y));
+  const y0 = Math.floor((Math.min(...ys) - pad) / 5) * 5, y1 = Math.ceil((Math.max(...ys) + pad) / 5) * 5;
+  const sx = (x) => L + ((+new Date(x) - x0) / (x1 - x0)) * (W - L - Rr);
+  const sy = (y) => T + (1 - (y - y0) / (y1 - y0)) * (H - T - B);
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  const paso = Math.max(5, Math.ceil((y1 - y0) / 4 / 5) * 5);
+  for (let y = y0; y <= y1; y += paso) s += `<line x1="${L}" x2="${W - Rr}" y1="${sy(y)}" y2="${sy(y)}" stroke="var(--line)"/><text x="${L - 6}" y="${sy(y) + 4}" text-anchor="end" font-size="11" fill="var(--ink-3)">${y}</text>`;
+  const fechas = [...new Set(todos.map((p) => p.x))].sort();
+  const cada = Math.ceil(fechas.length / 6);
+  fechas.forEach((f, i) => { if (i % cada === 0) s += `<text x="${sx(f)}" y="${H - 8}" text-anchor="middle" font-size="11" fill="var(--ink-3)">${fechaCorta(f)}</text>`; });
+  for (const r of refs) s += `<line x1="${L}" x2="${W - Rr}" y1="${sy(r.y)}" y2="${sy(r.y)}" stroke="var(--ink-3)" stroke-dasharray="4 4"/><text x="${W - Rr + 6}" y="${sy(r.y) + 4}" font-size="11" fill="var(--ink-2)">${esc(r.label)}</text>`;
+  for (const se of series) {
+    const pts = [...se.puntos].sort((a, b) => (a.x < b.x ? -1 : 1));
+    if (pts.length > 1) s += `<polyline points="${pts.map((p) => sx(p.x) + "," + sy(p.y)).join(" ")}" fill="none" stroke="${se.color}" stroke-width="2" stroke-linejoin="round"/>`;
+    for (const p of pts) s += `<circle cx="${sx(p.x)}" cy="${sy(p.y)}" r="4.5" fill="${se.color}" stroke="var(--surface)" stroke-width="2"/><circle cx="${sx(p.x)}" cy="${sy(p.y)}" r="14" fill="transparent" data-t="${esc(se.nombre + " · " + fechaCorta(p.x) + ": " + p.y + " " + unidad)}"/>`;
+    const u = pts[pts.length - 1];
+    if (series.length > 1) s += `<text x="${sx(u.x) + 10}" y="${sy(u.y) + 4}" font-size="11" fill="var(--ink-2)">${esc(se.nombre)}</text>`;
+  }
+  s += `</svg><div class="tt"></div>`;
+  cont.innerHTML = (series.length > 1 ? `<div class="legend">${series.map((x) => `<span><i class="dot" style="background:${x.color}"></i>${esc(x.nombre)}</span>`).join("")}</div>` : "") + s;
+  const tt = cont.querySelector(".tt"), svg = cont.querySelector("svg");
+  cont.querySelectorAll("[data-t]").forEach((c) => {
+    c.addEventListener("mouseenter", () => {
+      const b = svg.getBoundingClientRect(), k = b.width / W, off = svg.offsetTop;
+      tt.textContent = c.dataset.t; tt.style.display = "block";
+      tt.style.left = c.getAttribute("cx") * k + "px"; tt.style.top = off + c.getAttribute("cy") * k + "px";
+    });
+    c.addEventListener("mouseleave", () => (tt.style.display = "none"));
+  });
+}
+
+function renderRegistro() {
+  const sec = $("#registro");
+  const M = D.mediciones;
+  const uP = ultimo(M, "peso"), uS = ultimo(M, "sistolica"), uF = ultimo(D.sesiones, "fcMedia");
+  const tile = (k, v, d, color) => `<div class="tile"><div class="k">${k}</div><div class="v">${v}</div><div class="d">${color ? `<i class="dot" style="background:${color}"></i>` : ""}${d}</div></div>`;
+  let tiles = "";
+  if (uP) {
+    const imc = uP.peso / ESTATURA ** 2, [ci, cc] = catIMC(imc), primero = M.find((m) => m.peso != null);
+    const dif = uP.peso - primero.peso;
+    tiles += tile("Peso", uP.peso.toFixed(1) + " kg", (M.filter((m) => m.peso != null).length > 1 ? (dif <= 0 ? "▼ " : "▲ ") + Math.abs(dif).toFixed(1) + " kg desde el inicio" : fechaCorta(uP.fecha)));
+    tiles += tile("IMC", imc.toFixed(1), ci, cc);
+  }
+  if (uS) { const [cp, cc] = catPresion(uS.sistolica, uS.diastolica); tiles += tile("Presión", uS.sistolica + "/" + uS.diastolica, cp + " · " + fechaCorta(uS.fecha), cc); }
+  tiles += tile("Último entrenamiento", uF ? uF.fcMedia + " lpm" : "—", uF ? `Pulso medio · ${fechaCorta(uF.fecha)} · máx. ${uF.fcMax}` : "Pásame la captura de la Mi Band");
+  tiles += tile("Meta", "67 kg", "Peso adecuado · presión bajo 120/80");
+  sec.innerHTML = `<h2>Registro</h2><div class="tiles">${tiles}</div>
+    <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(min(100%,460px),1fr))">
+      <div class="box"><h3>Peso (kg)</h3><div class="chart" id="gPeso"></div></div>
+      <div class="box"><h3>Presión arterial (mmHg)</h3><div class="chart" id="gPres"></div></div>
+      <div class="box"><h3>Pulso en cada entrenamiento (lpm, Mi Band)</h3><div class="chart" id="gFc"></div></div>
+      <div class="box"><h3>kcal en cada entrenamiento (Mi Band)</h3><div class="chart" id="gPasos"></div></div>
     </div>
-  </main>
+    <div class="box"><h3>Mediciones</h3><div class="scroll" id="tMed"></div></div>
+    <div class="box"><h3>Mi Band (resumen del día)</h3><div class="scroll" id="tBand"></div></div>
+    <div class="box"><h3>Entrenamientos</h3><div class="scroll" id="tSes"></div></div>`;
+  grafico($("#gPeso"), { unidad: "kg", pad: 2, refs: [{ y: 78, label: "Paso 78" }, { y: 67, label: "Meta 67" }],
+    series: [{ nombre: "Peso", color: "var(--s1)", puntos: M.filter((m) => m.peso != null).map((m) => ({ x: m.fecha, y: m.peso })) }] });
+  grafico($("#gPres"), { unidad: "mmHg", refs: [{ y: 130, label: "130" }, { y: 120, label: "Ideal 120" }, { y: 80, label: "80" }],
+    series: [
+      { nombre: "Sistólica", color: "var(--s1)", puntos: M.filter((m) => m.sistolica != null).map((m) => ({ x: m.fecha, y: m.sistolica })) },
+      { nombre: "Diastólica", color: "var(--s2)", puntos: M.filter((m) => m.diastolica != null).map((m) => ({ x: m.fecha, y: m.diastolica })) },
+    ] });
+  // La Mi Band solo se usa al entrenar: los gráficos salen de las sesiones.
+  const S = D.sesiones.filter((x) => x.fcMedia != null);
+  grafico($("#gFc"), { unidad: "lpm", refs: [{ y: 150, label: "Límite 150" }], series: [
+    { nombre: "Media", color: "var(--s1)", puntos: S.map((x) => ({ x: x.fecha, y: x.fcMedia })) },
+    { nombre: "Máximo", color: "var(--s2)", puntos: S.map((x) => ({ x: x.fecha, y: x.fcMax })) },
+  ] });
+  grafico($("#gPasos"), { unidad: "kcal", pad: 20, series: [{ nombre: "kcal", color: "var(--s1)", puntos: S.filter((x) => x.kcal != null).map((x) => ({ x: x.fecha, y: x.kcal })) }] });
+  const tabla = (cont, filas, cols) => {
+    $(cont).innerHTML = filas.length
+      ? `<table><thead><tr>${cols.map((c) => `<th>${c[0]}</th>`).join("")}</tr></thead><tbody>${[...filas].reverse().map((f) => `<tr>${cols.map((c) => `<td>${f[c[1]] == null ? "—" : esc(f[c[1]])}</td>`).join("")}</tr>`).join("")}</tbody></table>`
+      : `<p class="vacio">Aún no hay datos. Pásame la captura y la anoto.</p>`;
+  };
+  tabla("#tMed", M.map((m) => ({ ...m, pres: m.sistolica ? m.sistolica + "/" + m.diastolica : null })),
+    [["Fecha", "fecha"], ["Peso", "peso"], ["Presión", "pres"], ["Pulso", "pulso"], ["Fuente", "fuente"], ["Nota", "nota"]]);
+  tabla("#tBand", D.miband, [["Fecha", "fecha"], ["Pasos", "pasos"], ["FC media", "fcMedia"], ["FC mín", "fcMin"], ["FC máx", "fcMax"], ["Sueño (h)", "suenoHoras"], ["Estrés", "estres"], ["SpO2", "spo2"], ["Nota", "nota"]]);
+  tabla("#tSes", D.sesiones, [["Fecha", "fecha"], ["Día", "dia"], ["Min", "minutos"], ["FC media", "fcMedia"], ["FC máx", "fcMax"], ["kcal", "kcal"], ["Nota", "nota"]]);
+}
+
+// ---------- Reglas ----------
+function renderReglas() {
+  $("#reglas").innerHTML = `<h2>Reglas</h2>
+  <div class="box aviso rojo"><h3>Presión alta</h3><ul>
+    <li><b>Nunca aguantes la respiración</b> al hacer fuerza: exhala al subir o empujar.</li>
+    <li><b>Al fallo, respirando:</b> la serie termina cuando la repetición ya no sale limpia o sientes que vas a aguantar el aire. Descansos cortos (45 s).</li>
+    <li>Dolor de pecho, mareo, falta de aire rara o dolor de cabeza fuerte: parar y consultar.</li>
+    <li>Sin caminata, las pesas hacen de cardio: descansos cortos para que el pulso no baje de 110.</li></ul></div>
+  <div class="box"><h3>Repeticiones y peso</h3><ul>
+    <li><b>Al fallo:</b> si puedes hacer más repeticiones que las de la tarjeta, hazlas. La serie termina cuando ya no sale una limpia.</li>
+    <li>Una repetición cuenta solo si la haces <b>respirando</b> y con buena postura.</li>
+    <li>Menos del mínimo del rango: la mancuerna está pesada, baja a la anterior.</li>
+    <li>Dentro del rango: sigue con esa mancuerna.</li>
+    <li>Más del máximo en todas las series: la próxima vez, sube a la siguiente mancuerna (la tarjeta dice cuál).</li>
+    <li>Ya en 10 kg (la más pesada): haz todas las que salgan, más lentas: 3 s para bajar y una pausa arriba.</li>
+    <li><b>Por qué pesos distintos:</b> los músculos grandes con el brazo doblado (remo, peso muerto) aguantan mucho más que los pequeños con el brazo estirado (aperturas, elevaciones laterales), donde la mancuerna queda lejos del hombro y pesa como si fuera más.</li></ul></div>
+  <div class="box"><h3>Orden de los entrenamientos</h3><ul>
+    <li>No van por día de la semana: se hace el que sigue (Empuje 1 → Tirón 1 → Piernas 1 → Empuje 2 → Tirón 2 → Piernas 2).</li>
+    <li>El que toca lleva un punto azul. Sale del registro: Michael le cuenta a Claude en el chat lo que entrenó y Claude lo anota.</li>
+    <li>La página no guarda nada en el navegador.</li></ul></div>
+  <div class="box aviso"><h3>Espalda baja</h3><ul>
+    <li>Columna neutra en todo: nada de redondear la espalda con peso.</li>
+    <li><b>🟨 Cinturón</b> en los ejercicios marcados en amarillo (sentadilla, peso muerto rumano, zancada, búlgara y granjero): firme pero dejándote respirar.</li>
+    <li>La rueda abdominal entra en la fase 3, de rodillas y en recorrido corto.</li>
+    <li>El banco es plástico: para sentarse o apoyarse, <b>nunca para subirse</b>.</li></ul></div>
+  <div class="box"><h3>Zonas de pulso (Mi Band)</h3><p class="small">Pulso máximo estimado: 185 lpm (220 − 35).</p><ul>
+    <li>Durante las pesas: <b>110–130 lpm</b> (60–70 %). La banda se inicia al empezar el calentamiento y se detiene al terminar el estiramiento.</li>
+    <li>No pasar de <b>150 lpm</b> (80 %) mientras la presión esté alta.</li>
+    <li>Si el médico te receta pastillas para la presión, algunas bajan el pulso: avisa para ajustar las zonas.</li></ul></div>
+  <div class="box"><h3>Comida</h3><ul>
+    <li>Menos sal: nada de embutidos, sopas de sobre ni snacks salados. Es lo que más ayuda a la presión.</li>
+    <li>El plan de comidas lo confirma el médico o un nutricionista.</li></ul></div>
+  <div class="box"><h3>Fases</h3><ul>${R.fases.map((f) => `<li><b>${esc(f.nombre)}</b> (semanas ${f.semanas[0]}–${f.semanas[1] > 50 ? "…" : f.semanas[1]}): ${f.series} series. ${esc(f.nota)}</li>`).join("")}</ul></div>`;
+}
+
+// ---------- Pestañas ----------
+// Los 6 días arriba, en orden: Michael entrena el que sigue, sin importar el día de la semana.
+// Registro va primero y es lo que se abre (Michael, 15/11/2026).
+const TABS = (D ? [["registro", "Registro"]] : []).concat([["calenta", "Calentamiento"]]).concat(ORDEN.map((k) => [k, R.dias[k].nombre]), [["estira", "Estiramiento"], ["equipo", "Mi equipo"], ["reglas", "Reglas"]]);
+const main = $("main");
+["calenta"].concat(ORDEN, ["estira", "equipo"]).reverse().forEach((id) => main.insertAdjacentHTML("afterbegin", `<section id="${id}" hidden></section>`));
+$("#tabs").innerHTML = TABS.map(([id, n]) => `<button role="tab" id="tab-${id}">${n}</button>`).join("");
+TABS.forEach(([id]) => ($("#tab-" + id).onclick = () => { mostrar(id); scrollTo(0, 0); }));
+function mostrar(id) {
+  TABS.forEach(([t]) => { $("#" + t).hidden = t !== id; $("#tab-" + t).setAttribute("aria-selected", t === id); });
+}
+function renderTodo() {
+  $("#estado").textContent = `Semana ${semana} · ${fase ? fase.nombre : ""} · Te toca: ${R.dias[siguiente()].nombre}`;
+  figuras.length = 0;
+  const s = siguiente();
+  ORDEN.forEach((k) => {
+    rutinaDia($("#" + k), k);
+    $("#tab-" + k).classList.toggle("toca", k === s);
+  });
+  renderCalentamiento();
+  renderEstiramiento();
+  renderEquipo();
+}
+
+
+renderTodo();
+if (D) renderRegistro();
+renderReglas();
+mostrar(D ? "registro" : siguiente());
+if (quieto) figuras.forEach((f) => pintar(f, 1)); else requestAnimationFrame(animar);
+</script>
 </body>
 </html>
