@@ -354,13 +354,16 @@ window.RUTINA = {
       nombre: "Torsión lumbar acostado", musculos: "Espalda baja, glúteo y cadera", reps: "30 s por lado", peso: "—", series: 1,
       pasos: ["Boca arriba, una pierna estirada y los brazos al lado del cuerpo.", "Dobla la otra rodilla y crúzala por encima de la pierna estirada; el pie queda apoyado al lado de esa rodilla.", "Con la mano de ese lado lleva la rodilla hacia el suelo; los hombros siguen apoyados."],
       respira: "Respira lento; con cada exhalación la rodilla baja un poco más.", cuidado: "Sin forzar: que se sienta estirar, no doler.",
-      vista: "desde arriba", props: { arriba: true },
-      // Vista desde los pies: cabeza arriba, piernas abajo. La rodilla derecha cruza sobre la pierna estirada.
-      otra: { vista: "de lado", props: { tapete: true },
-        ini: { h: [38, 138], n: [52, 142], p: [100, 142], kL: [130, 143], fL: [158, 145], kR: [131, 144], fR: [159, 146], eL: [64, 146], hL: [80, 147], eR: [64, 146], hR: [80, 147] },
-        fin: { h: [38, 138], n: [52, 142], p: [100, 140], kL: [130, 143], fL: [158, 145], kR: [116, 116], fR: [126, 142], eL: [64, 146], hL: [80, 147], eR: [92, 128], hR: [112, 118] } },
-      ini: { h: [100, 20], n: [100, 34], p: [100, 84], kL: [94, 114], fL: [92, 146], kR: [106, 114], fR: [108, 146], eL: [84, 56], hL: [80, 80], eR: [116, 56], hR: [120, 80] },
-      fin: { h: [100, 20], n: [100, 34], p: [100, 84], kL: [94, 114], fL: [92, 146], kR: [76, 100], fR: [80, 124], eL: [80, 66], hL: [76, 92], eR: [116, 56], hR: [120, 80] },
+      // Postura en 3D [X a lo largo del cuerpo (cabeza −, pies +), Y altura, Z de lado (− izquierda, + derecha)].
+      // Las 3 vistas (desde arriba, de lado e inclinada) salen de aquí, así siempre muestran lo mismo.
+      // La rodilla derecha cruza por encima de la pierna izquierda estirada y la mano izquierda la lleva al suelo.
+      pose3d: {
+        ini: { h: [-62, 5, 0], n: [-48, 4, 0], p: [0, 4, 0], kL: [30, 4, -6], fL: [58, 4, -8], kR: [30, 4, 6], fR: [58, 4, 8],
+          eL: [-30, 4, -17], hL: [-10, 4, -19], eR: [-30, 4, 17], hR: [-10, 4, 19] },
+        fin: { h: [-62, 5, 0], n: [-48, 4, 0], p: [0, 6, -3], kL: [30, 4, -6], fL: [58, 4, -8], kR: [18, 9, -24], fR: [30, 4, -14],
+          eL: [-14, 8, -26], hL: [14, 10, -27], eR: [-30, 4, 17], hR: [-10, 4, 19] },
+      },
+      props: { tapete: true },
     },
     paloma: {
       // La canilla de adelante cruza de lado bajo el cuerpo: rodilla hacia un lado, talón delante de la otra cadera.

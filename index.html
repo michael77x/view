@@ -80,10 +80,12 @@ th { color: var(--ink-2); font-weight: 600; }
 .card.con-cinturon { border: 2px solid var(--warning); }
 .cinturon-box { border: 2px solid var(--warning); }
 nav button.toca::after { content: " •"; color: var(--accent); font-weight: 700; }
-.fin { margin: 20px 0; }
+.fin { margin: 24px 0 32px; }
+.btn.grande { display: block; width: 100%; max-width: 480px; margin: 0 auto; padding: 16px; font-size: 1.1rem; border-radius: 12px; }
 .card.futuro { opacity: .55; }
 .btn { font: inherit; font-weight: 600; padding: 10px 18px; border-radius: 10px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
 button.vista { align-self: flex-start; margin: -40px 0 4px 12px; position: relative; font: inherit; font-size: .8rem; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.descanso.siguiente { margin-top: auto; }
 .descanso { font-size: .9rem; background: var(--accent-soft); border-radius: 8px; padding: 6px 10px; }
 .small a { color: var(--accent); }
 .usa { display: flex; flex-wrap: wrap; gap: 6px; font-size: .85rem; color: var(--ink-2); align-items: center; }
@@ -306,7 +308,19 @@ function vistasAlternas(ej) {
   const a = vistasSimples(ej), b = vistasSimples({ ...ej, fin: ej.fin2 });
   return a.map((v, i) => ({ ...v, cuadros: [v.ini, v.fin, v.ini, b[i].fin], msVuelta: 6400 }));
 }
-const vistasDe = (ej) => ej.circulo ? vistasCirculo(ej) : ej.fin2 ? vistasAlternas(ej) : vistasSimples(ej);
+// Con pose3d (postura en 3D hecha a mano) las 3 vistas salen de la misma postura.
+function vistas3D(ej) {
+  const ver = (vista, f, props) => {
+    const pasar = (pose) => Object.fromEntries(Object.entries(pose).map(([k, v]) => [k, f(v)]));
+    return { nombre: ej.nombre, eje: ej.eje, vista, props, ini: pasar(ej.pose3d.ini), fin: pasar(ej.pose3d.fin) };
+  };
+  return [
+    ver("desde arriba", ([X, , Z]) => [100 + Z, 80 + X], { arriba: true }),
+    ver("de lado", ([X, Y]) => [100 + X, 150 - Y], { tapete: true }),
+    ver("desde arriba inclinada", proyectar, { oblicua: { tapete: true } }),
+  ];
+}
+const vistasDe = (ej) => ej.pose3d ? vistas3D(ej) : ej.circulo ? vistasCirculo(ej) : ej.fin2 ? vistasAlternas(ej) : vistasSimples(ej);
 
 const seg = (n) => (n >= 60 ? (n % 60 ? `${Math.floor(n / 60)} min ${n % 60} s` : `${n / 60} min`) : `${n} s`);
 
@@ -345,10 +359,9 @@ function datosEjercicio(ej, modo) {
   return `<dl class="datos">${filas.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>`;
 }
 function descansoDe(ej) {
-  const despues = `<br>Al terminar este ejercicio: <b>${seg(R.entreEjercicios)}</b> antes del siguiente.`;
-  if (ej.escalera) return { s: R.descansoEscalera, txt: `Entre series: solo cambiar de mancuerna (unos ${R.descansoEscalera} s). Entre un lado y otro, sin descanso.` + despues };
+  if (ej.escalera) return { s: R.descansoEscalera, txt: `Entre series: solo cambiar de mancuerna (unos ${R.descansoEscalera} s). Entre un lado y otro, sin descanso.` };
   const s = fase ? fase.descanso : 45;
-  return { s, txt: `Entre series: <b>${seg(s)}</b>.` + despues };
+  return { s, txt: `Entre series: <b>${seg(s)}</b>.` };
 }
 // modo: "dia" (entrenamiento, con descanso), "calentamiento" o "estira"
 function tarjeta(id, i, modo) {
@@ -388,7 +401,8 @@ function tarjeta(id, i, modo) {
     ${d ? `<div class="descanso">${d.txt}</div>` : ""}
     <ol>${ej.pasos.map((p) => `<li>${esc(p)}</li>`).join("")}</ol>
     <div class="tip"><b>Respira:</b> ${esc(ej.respira)}</div>
-    <div class="tip"><b>Cuidado:</b> ${esc(ej.cuidado)}</div>`;
+    <div class="tip"><b>Cuidado:</b> ${esc(ej.cuidado)}</div>
+    ${d ? `<div class="descanso siguiente">✔ Al terminar este ejercicio: <b>${seg(R.entreEjercicios)}</b> de descanso antes del siguiente.</div>` : ""}`;
   card.appendChild(body);
   return card;
 }
@@ -418,8 +432,8 @@ function rutinaDia(sec, dia) {
   g.className = "grid";
   ejerciciosDe(dia).forEach((id, i) => g.appendChild(tarjeta(id, i, "dia", dia)));
   sec.appendChild(g);
-  sec.insertAdjacentHTML("beforeend", `<p class="small fin">Al terminar: <a href="#" data-ir2="estira">Estiramiento</a>. Después cuéntale a Claude en el chat qué hiciste (o pásale la captura de la Mi Band) y lo anota.</p>`);
-  sec.querySelector("[data-ir2]").onclick = (e) => { e.preventDefault(); mostrar("estira"); scrollTo(0, 0); };
+  sec.insertAdjacentHTML("beforeend", `<div class="fin"><button class="btn grande" data-ir2="estira">Terminé · Ir al estiramiento →</button></div>`);
+  sec.querySelector("[data-ir2]").onclick = () => { mostrar("estira"); scrollTo(0, 0); };
 }
 
 function lista(sec, titulo, nota, ids, modo) {
