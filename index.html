@@ -84,7 +84,8 @@ nav button.toca::after { content: " •"; color: var(--accent); font-weight: 700
 .btn.grande { display: block; width: 100%; max-width: 480px; margin: 0 auto; padding: 16px; font-size: 1.1rem; border-radius: 12px; }
 .card.futuro { opacity: .55; }
 .btn { font: inherit; font-weight: 600; padding: 10px 18px; border-radius: 10px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
-button.vista { align-self: flex-start; margin: -40px 0 4px 12px; position: relative; font: inherit; font-size: .8rem; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.controles { display: flex; gap: 8px; margin: -40px 0 4px 12px; position: relative; }
+button.vista { align-self: flex-start; font: inherit; font-size: .8rem; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
 .descanso.siguiente { margin-top: auto; }
 .descanso { font-size: .9rem; background: var(--accent-soft); border-radius: 8px; padding: 6px 10px; }
 .small a { color: var(--accent); }
@@ -161,7 +162,8 @@ function figura(ej) {
   const cerca = { ...lejos, stroke: "var(--fig)" };
   const f = {
     legL: el("polyline", lejos, svg), armL: el("polyline", lejos, svg),
-    torso: el("polyline", cerca, svg), legR: el("polyline", cerca, svg),
+    torso: el("polyline", cerca, svg), hombros: el("polyline", cerca, svg), caderas: el("polyline", cerca, svg),
+    legR: el("polyline", cerca, svg),
     head: el("circle", { r: 9, fill: "var(--fig)" }, svg), armR: el("polyline", cerca, svg),
     dbs: [], rueda: null, ej,
   };
@@ -175,7 +177,7 @@ function figura(ej) {
     el("rect", { x: -10, y: -5, width: 5, height: 10, rx: 1.5, fill: "var(--db)" }, barra);
     el("rect", { x: 5, y: -5, width: 5, height: 10, rx: 1.5, fill: "var(--db)" }, barra);
     if (largo < 0.6) el("circle", { r: 5.5, fill: "var(--db)", opacity: Math.min(1, 1.6 - largo * 2) }, g);
-    f.dbs.push({ g, lado });
+    f.dbs.push({ g, lado, barra, neutro: ej.eje === "neutro" && !!ej.ladoRef });
   }
   if (pr.rueda) f.rueda = el("circle", { r: 8, fill: "none", stroke: "var(--db)", "stroke-width": 4 }, svg);
   f.svg = svg;
@@ -185,8 +187,8 @@ function figura(ej) {
 }
 // Dirección en pantalla del eje de la mancuerna para la vista que se dibuja.
 const EJES = { X: [1, 0, 0], Y: [0, 1, 0], Z: [0, 0, 1] };
-function ejeEnPantalla(src) {
-  const [X, Y, Z] = EJES[src.eje || "Z"], pr = src.props || {};
+function ejeEnPantalla(src, vec) {
+  const [X, Y, Z] = vec || EJES[src.eje === "neutro" ? "X" : src.eje || "Z"], pr = src.props || {};
   if (pr.oblicua) { const a = proyectar([X, Y, Z]), o = proyectar([0, 0, 0]); return [a[0] - o[0], a[1] - o[1]]; }
   if (pr.arriba) return [Z, X];   // desde arriba, cuerpo vertical (cabeza arriba)
   if (pr.arribaH) return [X, Z];  // desde arriba, cuerpo horizontal
@@ -194,27 +196,70 @@ function ejeEnPantalla(src) {
   return [X, -Y];                 // de lado
 }
 const mezcla = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+// Entre dos posturas cada parte del cuerpo GIRA desde su articulación (como un cuerpo de verdad), no se desliza en
+// línea recta: así el antebrazo de un curl dibuja un arco desde el codo y no se encoge a mitad de camino.
+const PADRE = { n: "p", h: "n", sL: "n", sR: "n", qL: "p", qR: "p", eL: "n", hL: "eL", eR: "n", hR: "eR", kL: "p", fL: "kL", kR: "p", fR: "kR" };
+const ORDEN_HUESOS = ["n", "h", "sL", "sR", "qL", "qR", "eL", "hL", "eR", "hR", "kL", "fL", "kR", "fR"];
+const padreDe = (k, A) => (/^e[LR]$/.test(k) && A["s" + k[1]] ? "s" + k[1] : /^k[LR]$/.test(k) && A["q" + k[1]] ? "q" + k[1] : PADRE[k]);
+function mezclarPose(A, B, u) {
+  const P = { p: mezcla(A.p, B.p, u) };
+  for (const k of ORDEN_HUESOS) {
+    if (!A[k] || !B[k]) continue;
+    const pa = padreDe(k, A);
+    const va = [A[k][0] - A[pa][0], A[k][1] - A[pa][1]], vb = [B[k][0] - B[pa][0], B[k][1] - B[pa][1]];
+    const ra = Math.hypot(...va), rb = Math.hypot(...vb);
+    const aa = Math.atan2(va[1], va[0]);
+    let d = Math.atan2(vb[1], vb[0]) - aa;
+    d = ((d + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI; // giro más corto
+    // Si casi da media vuelta o el hueso cambia mucho de largo, el movimiento va hacia el costado (fuera del dibujo):
+    // ahí se mueve recto, como se ve de verdad desde ese lado (press de hombros visto de lado).
+    if (Math.abs(d) > 2.6 || Math.min(ra, rb) < 0.7 * Math.max(ra, rb)) {
+      P[k] = [P[pa][0] + va[0] + (vb[0] - va[0]) * u, P[pa][1] + va[1] + (vb[1] - va[1]) * u];
+      continue;
+    }
+    const ang = aa + d * u, r = ra + (rb - ra) * u;
+    P[k] = [P[pa][0] + r * Math.cos(ang), P[pa][1] + r * Math.sin(ang)];
+  }
+  return P;
+}
 function pintar(f, t, vuelta = 0) {
-  const P = {};
-  if (f.ej.cuadros) { // movimiento en círculo: recorre los cuadros sin volver atrás
+  let P;
+  if (f.ej.cuadros) { // varios cuadros seguidos (círculo, lados alternos): recorre sin volver atrás
     const c = f.ej.cuadros, v = (vuelta * 2400) / (f.ej.msVuelta || 2400);
     const x = (v % 1) * c.length, i = Math.floor(x), u = f.ej.msVuelta ? 0.5 - 0.5 * Math.cos(Math.PI * (x - i)) : x - i;
-    for (const k in c[i]) P[k] = mezcla(c[i][k], c[(i + 1) % c.length][k], u);
-  } else for (const k in f.ej.ini) P[k] = mezcla(f.ej.ini[k], f.ej.fin[k], t);
+    P = mezclarPose(c[i], c[(i + 1) % c.length], u);
+  } else P = mezclarPose(f.ej.ini, f.ej.fin, t);
   const pts = (...ks) => ks.map((k) => P[k].join(",")).join(" ");
-  f.legL.setAttribute("points", pts("p", "kL", "fL"));
-  f.legR.setAttribute("points", pts("p", "kR", "fR"));
-  f.armL.setAttribute("points", pts("n", "eL", "hL"));
-  f.armR.setAttribute("points", pts("n", "eR", "hR"));
+  const ancho3d = !!P.sL;
+  f.legL.setAttribute("points", pts(ancho3d ? "qL" : "p", "kL", "fL"));
+  f.legR.setAttribute("points", pts(ancho3d ? "qR" : "p", "kR", "fR"));
+  f.armL.setAttribute("points", pts(ancho3d ? "sL" : "n", "eL", "hL"));
+  f.armR.setAttribute("points", pts(ancho3d ? "sR" : "n", "eR", "hR"));
   f.torso.setAttribute("points", pts("h", "n", "p"));
+  f.hombros.setAttribute("points", ancho3d ? pts("sL", "n", "sR") : "");
+  f.caderas.setAttribute("points", ancho3d ? pts("qL", "p", "qR") : "");
   f.head.setAttribute("cx", P.h[0]); f.head.setAttribute("cy", P.h[1]);
-  for (const d of f.dbs) { const h = P["h" + d.lado]; d.g.setAttribute("transform", `translate(${h[0]},${h[1]})`); }
+  let Plado = null;
+  for (const d of f.dbs) {
+    const h = P["h" + d.lado];
+    d.g.setAttribute("transform", `translate(${h[0]},${h[1]})`);
+    if (!d.neutro) continue;
+    // Agarre neutro: el mango cruza la palma, perpendicular al antebrazo, y gira con él (muñeca firme).
+    Plado = Plado || mezclarPose(f.ej.ladoRef.ini, f.ej.ladoRef.fin, t);
+    const e = Plado["e" + d.lado], m = Plado["h" + d.lado];
+    const fx = m[0] - e[0], fy = -(m[1] - e[1]); // antebrazo en 3D (X adelante, Y arriba)
+    const [dx, dy] = ejeEnPantalla(f.ej, [-fy, fx, 0]);
+    const largo = Math.hypot(dx, dy) / (Math.hypot(fx, fy) || 1);
+    d.barra.setAttribute("transform", `rotate(${(Math.atan2(dy, dx) * 180) / Math.PI}) scale(${Math.max(largo, 0.05)},1)`);
+  }
   if (f.rueda) { f.rueda.setAttribute("cx", P.hR[0]); f.rueda.setAttribute("cy", f.ej.props && (f.ej.props.arribaH || f.ej.props.oblicua) ? P.hR[1] : 142); }
 }
 const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let ahora = { t: 0, vuelta: 0 }; // el momento de la animación, para congelar una figura al pausarla
 function animar(ms) {
   const t = 0.5 - 0.5 * Math.cos((ms / 3200) * 2 * Math.PI); // ~1,6 s bajar, 1,6 s subir
-  for (const f of figuras) if (f.svg.isConnected && f.svg.getBoundingClientRect().width) pintar(f, t, ms / 2400);
+  ahora = { t, vuelta: ms / 2400 };
+  for (const f of figuras) if (!f.pausa && f.svg.isConnected && f.svg.getBoundingClientRect().width) pintar(f, t, ms / 2400);
   requestAnimationFrame(animar);
 }
 
@@ -227,7 +272,19 @@ const ANCHO = { h: 0, n: 0, p: 0, kL: -8, fL: -10, kR: 8, fR: 10, eL: -14, hL: -
 const ancho = (ej, k) => (ej.lado && ej.lado[k] != null ? ej.lado[k] : ej.juntas && /^h[LR]$/.test(k) ? 0 : ej.juntas && /^e[LR]$/.test(k) ? ANCHO[k] / 2 : ANCHO[k]);
 
 // Posturas 3D [X adelante, Y alto, Z lado] a partir de lo que trae el ejercicio.
+// En 3D el cuerpo tiene ancho: hombros (sL/sR) y caderas (qL/qR) a los costados del cuello y de la cadera.
+// Los brazos cuelgan desde cada hombro y las piernas desde cada lado de la cadera (si no, en las vistas calculadas
+// los brazos salían del centro del cuello y parecían doblados al revés).
+const HOMBRO = 12, CADERA = 6;
+function conAncho(o) {
+  const [nx, ny, nz] = o.n, [px, py, pz] = o.p;
+  return { ...o, sL: [nx, ny, nz - HOMBRO], sR: [nx, ny, nz + HOMBRO], qL: [px, py, pz - CADERA], qR: [px, py, pz + CADERA] };
+}
 function en3D(ej) {
+  const t = en3Dplano(ej);
+  return { ...t, ini: conAncho(t.ini), fin: conAncho(t.fin) };
+}
+function en3Dplano(ej) {
   const dePose = (lado, arriba) => {
     const o = {};
     for (const k in lado) {
@@ -290,7 +347,7 @@ function vistasCirculo(ej) {
   const base = { h: [0, 122, 0], n: [0, 108, 0], p: [0, 60, 0], kL: [0, 30, -8], fL: [0, 0, -10], kR: [0, 30, 8], fR: [0, 0, 10] };
   const c3 = Array.from({ length: N }, (_, i) => {
     const a = (i / N) * 2 * Math.PI, X = r * Math.cos(a), Y = 108 + r * Math.sin(a);
-    return { ...base, hL: [X, Y, -36], eL: [X / 2, (108 + Y) / 2, -18], hR: [X, Y, 36], eR: [X / 2, (108 + Y) / 2, 18] };
+    return conAncho({ ...base, hL: [X, Y, -36], eL: [X / 2, (108 + Y) / 2, -18], hR: [X, Y, 36], eR: [X / 2, (108 + Y) / 2, 18] });
   });
   const ver = (vista, f, props) => {
     const cuadros = c3.map((c) => Object.fromEntries(Object.entries(c).map(([k, v]) => [k, f(v)])));
@@ -302,7 +359,10 @@ function vistasCirculo(ej) {
     ver("de frente", ([X, Y, Z]) => [100 + Z, 150 - Y], {}),
   ];
 }
-const vistasSimples = (ej) => [{ ...ej, vista: ej.vista || "de lado" }, otraVista(ej), vistaInclinada(ej)];
+const vistasSimples = (ej) => {
+  const ref = ej.vista ? null : { ini: ej.ini, fin: ej.fin }; // postura de lado, para girar la mancuerna con el antebrazo
+  return [{ ...ej, vista: ej.vista || "de lado" }, otraVista(ej), vistaInclinada(ej)].map((v) => ({ ...v, ladoRef: ref }));
+};
 // Con fin2 la figura alterna lados: centro → fin → centro → fin2 (1,6 s cada paso).
 function vistasAlternas(ej) {
   const a = vistasSimples(ej), b = vistasSimples({ ...ej, fin: ej.fin2 });
@@ -312,7 +372,7 @@ function vistasAlternas(ej) {
 function vistas3D(ej) {
   const ver = (vista, f, props) => {
     const pasar = (pose) => Object.fromEntries(Object.entries(pose).map(([k, v]) => [k, f(v)]));
-    return { nombre: ej.nombre, eje: ej.eje, vista, props, ini: pasar(ej.pose3d.ini), fin: pasar(ej.pose3d.fin) };
+    return { nombre: ej.nombre, eje: ej.eje, vista, props, ini: pasar(conAncho(ej.pose3d.ini)), fin: pasar(conAncho(ej.pose3d.fin)) };
   };
   return [
     ver("desde arriba", ([X, , Z]) => [100 + Z, 80 + X], { arriba: true }),
@@ -372,19 +432,34 @@ function tarjeta(id, i, modo) {
   let svg = figura(vistas[0]);
   card.appendChild(svg);
   {
-    let v = 0;
+    let v = 0, pausa = null; // pausa = { t, vuelta } mientras la figura está congelada
+    const controles = document.createElement("div");
+    controles.className = "controles";
     const b = document.createElement("button");
     b.className = "vista";
     const etiqueta = () => (b.textContent = `🔄 Ver ${vistas[(v + 1) % vistas.length].vista} (${v + 1}/${vistas.length})`);
     etiqueta();
+    const bp = document.createElement("button");
+    bp.className = "vista";
+    const etiquetaPausa = () => (bp.textContent = pausa ? "▶ Play" : "⏸ Pausa");
+    etiquetaPausa();
+    const aplicarPausa = () => {
+      const f = figuras.find((x) => x.svg === svg);
+      if (!f) return;
+      f.pausa = pausa;
+      if (pausa) pintar(f, pausa.t, pausa.vuelta);
+    };
+    bp.onclick = () => { pausa = pausa ? null : { ...ahora }; etiquetaPausa(); aplicarPausa(); };
     b.onclick = () => {
       v = (v + 1) % vistas.length;
       const nuevo = figura(vistas[v]);
       svg.replaceWith(nuevo);
       svg = nuevo;
       etiqueta();
+      aplicarPausa(); // si estaba en pausa, la otra vista muestra el mismo momento
     };
-    card.appendChild(b);
+    controles.append(bp, b);
+    card.appendChild(controles);
   }
   const body = document.createElement("div");
   body.className = "body";

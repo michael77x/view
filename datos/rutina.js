@@ -2,7 +2,8 @@
 // Cada ejercicio trae dos posturas (ini / fin) para la figura animada.
 // Puntos: h cabeza, n cuello/hombros, p cadera, kL/kR rodillas, fL/fR pies, eL/eR codos, hL/hR manos.
 // Lienzo 200 x 160, suelo en y = 150. L = lado lejano (se dibuja más claro).
-// eje = hacia dónde apunta la barra de la mancuerna: "Z" (de lado a lado, por defecto), "X" (adelante-atrás) o "Y" (vertical).
+// eje = hacia dónde apunta la barra de la mancuerna: "Z" (de lado a lado, por defecto), "X" (adelante-atrás, fija),
+//       "Y" (vertical) o "neutro" (palma mirando al cuerpo: el mango queda perpendicular al antebrazo y gira con él).
 // Con eso la mancuerna se ve igual en las 3 vistas (de punta, se ve el disco).
 window.RUTINA = {
   inicio: "2026-11-16", // lunes de la semana 1
@@ -67,12 +68,13 @@ window.RUTINA = {
 
   ejercicios: {
     sentadilla_banco: {
-      cinturon: true, nombre: "Sentadilla al banco", musculos: "Piernas y glúteos", reps: "15–20", peso: "10 kg al pecho (empieza con 7,5 kg)", kg: 7.5,
-      pasos: ["Párate delante del banco, pies al ancho de hombros.", "Lleva la cadera atrás hasta tocar el banco, sin dejarte caer.", "Empuja el suelo y sube."],
+      cinturon: true, nombre: "Sentadilla goblet", musculos: "Piernas y glúteos", reps: "15–20", peso: "10 kg al pecho (empieza con 7,5 kg)", kg: 7.5,
+      pasos: ["De pie, pies al ancho de hombros, la mancuerna sujeta con las dos manos contra el pecho.", "Lleva la cadera atrás y abajo, despacio, hasta donde la espalda siga recta.", "Empuja el suelo y sube."],
       respira: "Inhala al bajar, exhala al subir.", cuidado: "Pecho arriba, espalda recta. Las rodillas siguen la dirección de los pies.",
       mancuerna: "1, con las dos manos al pecho", juntas: true,
       eje: "Y", // mancuerna vertical, sujetada por un disco
-      props: { banco: [58, 30], mancuernas: "R" },
+      // Sin banco: Michael controla la bajada solo (15/11/2026). El id se queda para no romper las referencias.
+      props: { mancuernas: "R" },
       ini: { h: [104, 28], n: [100, 42], p: [94, 90], kL: [98, 120], fL: [100, 150], kR: [100, 120], fR: [102, 150], eL: [106, 64], hL: [110, 50], eR: [106, 64], hR: [110, 50] },
       fin: { h: [100, 54], n: [95, 66], p: [80, 112], kL: [107, 110], fL: [102, 150], kR: [109, 110], fR: [104, 150], eL: [102, 88], hL: [108, 74], eR: [102, 88], hR: [108, 74] },
     },
@@ -81,10 +83,10 @@ window.RUTINA = {
       pasos: ["Apoya una mano en el banco y da un paso atrás.", "Espalda plana, casi paralela al suelo.", "Sube la mancuerna hacia la cadera llevando el codo atrás."],
       respira: "Exhala al subir, inhala al bajar.", cuidado: "No gires el tronco. La mano en el banco quita carga a la lumbar.",
       mancuerna: "1: un lado y luego el otro",
-      eje: "X", // barra de adelante hacia atrás (palmas mirándose o hacia abajo)
+      eje: "neutro", // agarre neutro: el mango cruza la palma y gira con el antebrazo
       props: { banco: [112, 34], mancuernas: "R" },
-      ini: { h: [127, 72], n: [116, 80], p: [72, 94], kL: [84, 122], fL: [86, 150], kR: [62, 122], fR: [54, 150], eL: [120, 97], hL: [122, 114], eR: [114, 104], hR: [114, 126] },
-      fin: { h: [127, 72], n: [116, 80], p: [72, 94], kL: [84, 122], fL: [86, 150], kR: [62, 122], fR: [54, 150], eL: [120, 97], hL: [122, 114], eR: [96, 72], hR: [104, 94] },
+      ini: { h: [127, 72], n: [116, 80], p: [72, 94], kL: [84, 122], fL: [86, 150], kR: [62, 122], fR: [54, 150], eL: [119, 97], hL: [122, 114], eR: [114, 104], hR: [114, 126] },
+      fin: { h: [127, 72], n: [116, 80], p: [72, 94], kL: [84, 122], fL: [86, 150], kR: [62, 122], fR: [54, 150], eL: [119, 97], hL: [122, 114], eR: [96, 72], hR: [104, 94] },
     },
     press_suelo: {
       nombre: "Press de pecho en el suelo", musculos: "Pecho, hombros y tríceps", reps: "15–20", peso: "7,5 kg → 10 kg", kg: 10,
@@ -100,8 +102,8 @@ window.RUTINA = {
       respira: "Exhala al subir.", cuidado: "Sube con los glúteos, no arqueando la espalda. Muy bueno para la lumbar.",
       mancuerna: "1, apoyada sobre la cadera",
       props: { tapete: true, mancuernas: "R" },
-      ini: { h: [38, 138], n: [52, 142], p: [94, 142], kL: [120, 116], fL: [134, 147], kR: [122, 118], fR: [136, 147], eL: [64, 146], hL: [80, 147], eR: [72, 132], hR: [92, 134] },
-      fin: { h: [38, 138], n: [52, 141], p: [92, 122], kL: [122, 112], fL: [134, 147], kR: [124, 114], fR: [136, 147], eL: [64, 146], hL: [80, 147], eR: [70, 118], hR: [90, 114] },
+      ini: { h: [38, 138], n: [52, 142], p: [94, 142], kL: [120, 116], fL: [134, 147], kR: [122, 118], fR: [136, 147], eL: [64, 146], hL: [80, 147], eR: [72, 138], hR: [92, 134] },
+      fin: { h: [38, 138], n: [52, 141], p: [92, 122], kL: [122, 112], fL: [134, 147], kR: [124, 114], fR: [136, 147], eL: [64, 146], hL: [80, 147], eR: [71, 128], hR: [90, 114] },
     },
     press_hombro: {
       nombre: "Press de hombros sentado", musculos: "Hombros y tríceps", reps: "12–15", peso: "5 kg → 7,5 kg", kg: 7.5,
@@ -141,7 +143,7 @@ window.RUTINA = {
       cinturon: true, nombre: "Zancada estática", musculos: "Piernas y glúteos", reps: "12 por pierna", peso: "7,5 kg → 10 kg", kg: 7.5,
       pasos: ["Da un paso largo: un pie adelante y otro atrás.", "Baja recto hasta que la rodilla de atrás casi toque el suelo.", "Sube empujando con la pierna de adelante."],
       respira: "Inhala al bajar, exhala al subir.", cuidado: "Tronco recto. Si pierdes el equilibrio, apoya una mano en la pared.",
-      eje: "X", // barra de adelante hacia atrás (palmas mirándose o hacia abajo)
+      eje: "neutro", // agarre neutro: el mango cruza la palma y gira con el antebrazo
       props: { mancuernas: "LR" },
       ini: { h: [98, 32], n: [98, 44], p: [98, 92], kL: [112, 121], fL: [125, 150], kR: [84, 121], fR: [70, 148], eL: [98, 68], hL: [98, 90], eR: [99, 68], hR: [99, 90] },
       fin: { h: [98, 55], n: [98, 67], p: [98, 115], kL: [127, 117], fL: [125, 150], kR: [92, 143], fR: [70, 148], eL: [98, 91], hL: [98, 113], eR: [99, 91], hR: [99, 113] },
@@ -151,8 +153,9 @@ window.RUTINA = {
       pasos: ["De pie, codos pegados al cuerpo.", "Sube las mancuernas sin mover los codos.", "Baja en 2 segundos."],
       respira: "Exhala al subir.", cuidado: "Sin balancear el cuerpo: si te balanceas, el peso es mucho.",
       props: { mancuernas: "LR" },
-      ini: { h: [100, 28], n: [100, 42], p: [100, 90], kL: [98, 120], fL: [96, 150], kR: [102, 120], fR: [104, 150], eL: [100, 66], hL: [100, 88], eR: [102, 66], hR: [102, 88] },
-      fin: { h: [100, 28], n: [100, 42], p: [100, 90], kL: [98, 120], fL: [96, 150], kR: [102, 120], fR: [104, 150], eL: [100, 66], hL: [112, 50], eR: [102, 66], hR: [114, 50] },
+      // Codos un poco por delante del tronco para que el brazo no quede tapado por el cuerpo en la vista de lado.
+      ini: { h: [100, 28], n: [100, 42], p: [100, 90], kL: [98, 120], fL: [96, 150], kR: [102, 120], fR: [104, 150], eL: [103, 66], hL: [107, 88], eR: [105, 66], hR: [110, 88] },
+      fin: { h: [100, 28], n: [100, 42], p: [100, 90], kL: [98, 120], fL: [96, 150], kR: [102, 120], fR: [104, 150], eL: [103, 66], hL: [115, 48], eR: [105, 66], hR: [117, 48] },
     },
     elevacion_lateral: {
       nombre: "Elevaciones laterales", musculos: "Hombros", escalera: true, escalones: [[3, 30], [5, 20], [7.5, 10], [10, 5]], series: 4, reps: "30 · 20 · 10 · 5", peso: "3 → 5 → 7,5 → 10 kg",
@@ -175,7 +178,7 @@ window.RUTINA = {
       cinturon: true, nombre: "Paseo del granjero", musculos: "Agarre, núcleo y postura", reps: "40 s", peso: "10 kg", kg: 10,
       pasos: ["Toma una mancuerna pesada en cada mano.", "Camina erguido, hombros atrás, pasos cortos.", "Deja las mancuernas doblando las rodillas, no la espalda."],
       respira: "Respira normal mientras caminas.", cuidado: "Fortalece la zona lumbar sin doblarla.",
-      eje: "X", // barra de adelante hacia atrás (palmas mirándose o hacia abajo)
+      eje: "neutro", // agarre neutro: el mango cruza la palma y gira con el antebrazo
       props: { mancuernas: "LR" },
       ini: { h: [100, 28], n: [100, 42], p: [100, 90], kL: [106, 120], fL: [112, 150], kR: [94, 121], fR: [86, 150], eL: [100, 66], hL: [100, 90], eR: [101, 66], hR: [101, 90] },
       fin: { h: [100, 28], n: [100, 42], p: [100, 90], kL: [94, 121], fL: [86, 150], kR: [106, 120], fR: [112, 150], eL: [100, 66], hL: [100, 90], eR: [101, 66], hR: [101, 90] },
@@ -186,14 +189,14 @@ window.RUTINA = {
       respira: "Exhala al volver.", cuidado: "Recorrido corto al principio. Si duele la lumbar, se suspende.",
       props: { tapete: true, rueda: true },
       ini: { h: [118, 80], n: [108, 88], p: [76, 110], kL: [72, 145], fL: [46, 147], kR: [74, 145], fR: [48, 147], eL: [110, 114], hL: [112, 138], eR: [111, 114], hR: [113, 138] },
-      fin: { h: [150, 114], n: [138, 120], p: [90, 128], kL: [72, 145], fL: [46, 147], kR: [74, 145], fR: [48, 147], eL: [160, 128], hL: [178, 138], eR: [161, 128], hR: [179, 138] },
+      fin: { h: [150, 114], n: [138, 120], p: [90, 128], kL: [72, 145], fL: [46, 147], kR: [74, 145], fR: [48, 147], eL: [158, 129], hL: [178, 138], eR: [159, 129], hR: [179, 138] },
     },
     extension_triceps: {
       nombre: "Extensión de tríceps sentado", musculos: "Tríceps", escalera: true, escalones: [[3, 30], [5, 20], [7.5, 10], [10, 5]], series: 4, reps: "30 · 20 · 10 · 5 por lado", peso: "3 → 5 → 7,5 → 10 kg",
       pasos: ["Siéntate en el banco con la espalda recta y la mancuerna arriba, brazo estirado.", "Baja la mancuerna detrás de la cabeza doblando solo el codo.", "Estira el brazo de nuevo."],
       respira: "Exhala al estirar el brazo.", cuidado: "El codo apunta al techo y no se abre. Abdomen firme para no arquear la espalda.",
       mancuerna: "1: un brazo y luego el otro",
-      eje: "X", // agarre neutro: la barra va de adelante hacia atrás
+      eje: "neutro", // agarre neutro: el mango cruza la palma y gira con el antebrazo
       lado: { eR: 7, hR: 5, eL: -12, hL: -9 }, // el codo que trabaja va pegado a la cabeza; la otra mano en el muslo
       props: { banco: [82, 32], mancuernas: "R" },
       ini: { h: [97, 50], n: [97, 62], p: [97, 110], kL: [124, 110], fL: [124, 150], kR: [126, 111], fR: [126, 150], eL: [98, 86], hL: [112, 104], eR: [104, 38], hR: [106, 15] },
@@ -204,10 +207,10 @@ window.RUTINA = {
       pasos: ["Apoya una mano en el banco, espalda plana como en el remo.", "Codo pegado al cuerpo, a la altura de la espalda.", "Estira el brazo hacia atrás y vuelve, sin mover el codo."],
       respira: "Exhala al estirar.", cuidado: "Solo se mueve el antebrazo. La mano en el banco protege la lumbar.",
       mancuerna: "1: un brazo y luego el otro",
-      eje: "X", // barra de adelante hacia atrás (palmas mirándose o hacia abajo)
+      eje: "neutro", // agarre neutro: el mango cruza la palma y gira con el antebrazo
       props: { banco: [112, 34], mancuernas: "R" },
-      ini: { h: [127, 72], n: [116, 80], p: [72, 94], kL: [84, 122], fL: [86, 150], kR: [62, 122], fR: [54, 150], eL: [120, 97], hL: [122, 114], eR: [96, 84], hR: [98, 106] },
-      fin: { h: [127, 72], n: [116, 80], p: [72, 94], kL: [84, 122], fL: [86, 150], kR: [62, 122], fR: [54, 150], eL: [120, 97], hL: [122, 114], eR: [96, 84], hR: [74, 90] },
+      ini: { h: [127, 72], n: [116, 80], p: [72, 94], kL: [84, 122], fL: [86, 150], kR: [62, 122], fR: [54, 150], eL: [119, 97], hL: [122, 114], eR: [96, 84], hR: [98, 106] },
+      fin: { h: [127, 72], n: [116, 80], p: [72, 94], kL: [84, 122], fL: [86, 150], kR: [62, 122], fR: [54, 150], eL: [119, 97], hL: [122, 114], eR: [96, 84], hR: [74, 90] },
     },
     aperturas_suelo: {
       nombre: "Aperturas en el suelo", musculos: "Pecho", reps: "15–20", peso: "5 kg → 7,5 kg", kg: 5,
@@ -231,7 +234,7 @@ window.RUTINA = {
         ini: { h: [100, 74], n: [100, 82], p: [100, 110], kL: [90, 110], fL: [90, 150], kR: [110, 110], fR: [110, 150], eL: [92, 104], hL: [90, 126], eR: [108, 104], hR: [110, 126] },
         fin: { h: [100, 74], n: [100, 82], p: [100, 110], kL: [90, 110], fL: [90, 150], kR: [110, 110], fR: [110, 150], eL: [78, 88], hL: [58, 84], eR: [122, 88], hR: [142, 84] } },
       ini: { h: [130, 74], n: [120, 82], p: [90, 110], kL: [118, 110], fL: [118, 150], kR: [120, 111], fR: [120, 150], eL: [120, 104], hL: [122, 126], eR: [122, 104], hR: [124, 126] },
-      fin: { h: [130, 74], n: [120, 82], p: [90, 110], kL: [118, 110], fL: [118, 150], kR: [120, 111], fR: [120, 150], eL: [111, 72], hL: [107, 56], eR: [112, 72], hR: [108, 56] },
+      fin: { h: [130, 74], n: [120, 82], p: [90, 110], kL: [118, 110], fL: [118, 150], kR: [120, 111], fR: [120, 150], eL: [114, 69], hL: [107, 56], eR: [115, 69], hR: [108, 56] },
     },
     pullover: {
       nombre: "Pullover en el suelo", musculos: "Espalda ancha y pecho", reps: "15–20", peso: "7,5 kg → 10 kg (una mancuerna)", kg: 7.5,
@@ -246,16 +249,17 @@ window.RUTINA = {
       nombre: "Curl martillo", musculos: "Bíceps y antebrazo", escalera: true, series: 4, reps: "40 · 30 · 20 · 10 por lado", peso: "3 → 5 → 7,5 → 10 kg",
       pasos: ["De pie, mancuernas a los lados con las palmas mirándose.", "Sube sin girar la muñeca y sin mover los codos.", "Baja en 2 segundos."],
       respira: "Exhala al subir.", cuidado: "Sin balancear el cuerpo.",
-      eje: "X", // barra de adelante hacia atrás (palmas mirándose o hacia abajo)
+      eje: "neutro", // agarre neutro: el mango cruza la palma y gira con el antebrazo
       props: { mancuernas: "LR" },
-      ini: { h: [100, 28], n: [100, 42], p: [100, 90], kL: [98, 120], fL: [96, 150], kR: [102, 120], fR: [104, 150], eL: [100, 66], hL: [100, 88], eR: [102, 66], hR: [102, 88] },
-      fin: { h: [100, 28], n: [100, 42], p: [100, 90], kL: [98, 120], fL: [96, 150], kR: [102, 120], fR: [104, 150], eL: [100, 66], hL: [112, 50], eR: [102, 66], hR: [114, 50] },
+      // Codos un poco por delante del tronco para que el brazo no quede tapado por el cuerpo en la vista de lado.
+      ini: { h: [100, 28], n: [100, 42], p: [100, 90], kL: [98, 120], fL: [96, 150], kR: [102, 120], fR: [104, 150], eL: [103, 66], hL: [107, 88], eR: [105, 66], hR: [110, 88] },
+      fin: { h: [100, 28], n: [100, 42], p: [100, 90], kL: [98, 120], fL: [96, 150], kR: [102, 120], fR: [104, 150], eL: [103, 66], hL: [115, 48], eR: [105, 66], hR: [117, 48] },
     },
     remo_pecho_banco: {
       nombre: "Remo con el pecho en el banco", musculos: "Espalda", reps: "15–20", peso: "7,5 kg → 10 kg", kg: 7.5,
       pasos: ["De rodillas detrás del banco, apoya el pecho en el asiento.", "Mancuernas colgando a los lados del banco.", "Sube las dos a la vez llevando los codos atrás."],
       respira: "Exhala al subir.", cuidado: "El banco sostiene el tronco: la lumbar no trabaja. Si el banco se mueve, ponlo contra la pared.",
-      eje: "X", // barra de adelante hacia atrás (palmas mirándose o hacia abajo)
+      eje: "neutro", // agarre neutro: el mango cruza la palma y gira con el antebrazo
       props: { tapete: true, banco: [92, 32], mancuernas: "LR" },
       ini: { h: [128, 102], n: [116, 106], p: [70, 112], kL: [64, 146], fL: [38, 147], kR: [66, 146], fR: [40, 147], eL: [118, 124], hL: [120, 144], eR: [119, 124], hR: [121, 144] },
       fin: { h: [128, 102], n: [116, 106], p: [70, 112], kL: [64, 146], fL: [38, 147], kR: [66, 146], fR: [40, 147], eL: [100, 98], hL: [108, 118], eR: [101, 98], hR: [109, 118] },
@@ -264,7 +268,7 @@ window.RUTINA = {
       nombre: "Elevación de talones", musculos: "Pantorrillas", reps: "25–30", peso: "10 kg en cada mano", kg: 10,
       pasos: ["De pie, mancuernas a los lados.", "Sube en puntas de pie lo más alto que puedas.", "Baja despacio."],
       respira: "Respira normal.", cuidado: "Si pierdes el equilibrio, una mancuerna sola y la otra mano en la pared.",
-      eje: "X", // barra de adelante hacia atrás (palmas mirándose o hacia abajo)
+      eje: "neutro", // agarre neutro: el mango cruza la palma y gira con el antebrazo
       props: { mancuernas: "LR" },
       ini: { h: [100, 28], n: [100, 42], p: [100, 90], kL: [98, 120], fL: [98, 150], kR: [100, 120], fR: [100, 150], eL: [100, 66], hL: [100, 90], eR: [101, 66], hR: [101, 90] },
       fin: { h: [100, 20], n: [100, 34], p: [100, 82], kL: [98, 112], fL: [98, 142], kR: [100, 112], fR: [100, 142], eL: [100, 58], hL: [100, 82], eR: [101, 58], hR: [101, 82] },
@@ -273,7 +277,7 @@ window.RUTINA = {
       cinturon: true, nombre: "Sentadilla búlgara", musculos: "Piernas y glúteos", reps: "12 por pierna", peso: "5 kg → 7,5 kg", kg: 5,
       pasos: ["De espaldas al banco, apoya el empeine de un pie en el asiento (no te subas).", "El otro pie bien adelante.", "Baja recto hasta que el muslo de adelante quede casi horizontal y sube."],
       respira: "Inhala al bajar, exhala al subir.", cuidado: "Banco contra la pared para que no se deslice. Tronco recto.",
-      eje: "X", // barra de adelante hacia atrás (palmas mirándose o hacia abajo)
+      eje: "neutro", // agarre neutro: el mango cruza la palma y gira con el antebrazo
       props: { banco: [36, 30], mancuernas: "LR" },
       ini: { h: [94, 32], n: [94, 44], p: [94, 94], kL: [110, 122], fL: [122, 150], kR: [76, 120], fR: [54, 112], eL: [94, 68], hL: [94, 90], eR: [95, 68], hR: [95, 90] },
       fin: { h: [92, 54], n: [92, 66], p: [92, 116], kL: [121, 118], fL: [122, 150], kR: [80, 142], fR: [54, 112], eL: [92, 90], hL: [92, 112], eR: [93, 90], hR: [93, 112] },
@@ -372,7 +376,7 @@ window.RUTINA = {
       pasos: ["Desde cuatro apoyos, lleva una rodilla adelante y apóyala en el suelo.", "Cruza esa canilla con el talón delante de la rodilla; la otra pierna se estira atrás.", "Con las manos en el suelo, inclina el pecho hacia adelante."],
       respira: "Respira lento; al exhalar, baja un poco más el pecho.", cuidado: "La cadera queda recta, sin caerse a un lado. Si duele la rodilla de adelante, pon una almohada bajo la cadera.",
       props: { tapete: true },
-      ini: { h: [104, 74], n: [102, 86], p: [96, 132], kL: [62, 146], fL: [30, 147], kR: [124, 146], fR: [100, 146], eL: [108, 112], hL: [114, 146], eR: [110, 112], hR: [116, 146] },
+      ini: { h: [104, 74], n: [102, 86], p: [96, 132], kL: [62, 146], fL: [30, 147], kR: [124, 146], fR: [100, 146], eL: [107, 116], hL: [114, 146], eR: [109, 116], hR: [116, 146] },
       fin: { h: [150, 130], n: [136, 128], p: [96, 136], kL: [62, 146], fL: [30, 147], kR: [124, 146], fR: [100, 146], eL: [154, 140], hL: [176, 146], eR: [155, 140], hR: [177, 146] },
     },
 
