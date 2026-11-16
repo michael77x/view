@@ -198,8 +198,9 @@ function ejeEnPantalla(src, vec) {
 const mezcla = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
 // Entre dos posturas cada parte del cuerpo GIRA desde su articulación (como un cuerpo de verdad), no se desliza en
 // línea recta: así el antebrazo de un curl dibuja un arco desde el codo y no se encoge a mitad de camino.
-const PADRE = { n: "p", h: "n", sL: "n", sR: "n", qL: "p", qR: "p", eL: "n", hL: "eL", eR: "n", hR: "eR", kL: "p", fL: "kL", kR: "p", fR: "kR" };
-const ORDEN_HUESOS = ["n", "h", "sL", "sR", "qL", "qR", "eL", "hL", "eR", "hR", "kL", "fL", "kR", "fR"];
+const PADRE = { n: "p", h: "n", sL: "n", sR: "n", qL: "p", qR: "p", eL: "n", hL: "eL", eR: "n", hR: "eR", kL: "p", fL: "kL", kR: "p", fR: "kR", tL: "fL", tR: "fR" };
+// tL/tR: punta del pie (opcional, solo donde el pie se mueve: elevación de talones).
+const ORDEN_HUESOS = ["n", "h", "sL", "sR", "qL", "qR", "eL", "hL", "eR", "hR", "kL", "fL", "kR", "fR", "tL", "tR"];
 const padreDe = (k, A) => (/^e[LR]$/.test(k) && A["s" + k[1]] ? "s" + k[1] : /^k[LR]$/.test(k) && A["q" + k[1]] ? "q" + k[1] : PADRE[k]);
 function mezclarPose(A, B, u) {
   const P = { p: mezcla(A.p, B.p, u) };
@@ -234,8 +235,8 @@ function pintar(f, t, vuelta = 0) {
   } else P = mezclarPose(f.ej.ini, f.ej.fin, t);
   const pts = (...ks) => ks.map((k) => P[k].join(",")).join(" ");
   const ancho3d = !!P.sL;
-  f.legL.setAttribute("points", pts(ancho3d ? "qL" : "p", "kL", "fL"));
-  f.legR.setAttribute("points", pts(ancho3d ? "qR" : "p", "kR", "fR"));
+  f.legL.setAttribute("points", pts(ancho3d ? "qL" : "p", "kL", "fL", ...(P.tL ? ["tL"] : [])));
+  f.legR.setAttribute("points", pts(ancho3d ? "qR" : "p", "kR", "fR", ...(P.tR ? ["tR"] : [])));
   f.armL.setAttribute("points", pts(ancho3d ? "sL" : "n", "eL", "hL"));
   f.armR.setAttribute("points", pts(ancho3d ? "sR" : "n", "eR", "hR"));
   f.torso.setAttribute("points", pts("h", "n", "p"));
@@ -267,7 +268,7 @@ function animar(ms) {
 // ---------- Otra vista ----------
 // Si el ejercicio no trae `otra` hecha a mano, se calcula: de frente si está de pie o sentado,
 // desde arriba si está acostado o en cuatro apoyos. `otra: false` = sin botón.
-const ANCHO = { h: 0, n: 0, p: 0, kL: -8, fL: -10, kR: 8, fR: 10, eL: -14, hL: -16, eR: 14, hR: 16 };
+const ANCHO = { h: 0, n: 0, p: 0, kL: -8, fL: -10, kR: 8, fR: 10, eL: -14, hL: -16, eR: 14, hR: 16, tL: -10, tR: 10 };
 // Cada ejercicio tiene 3 vistas: la principal, otra (hecha a mano en `otra` o calculada)
 // y una desde arriba inclinada (3/4), calculada en 3D.
 const ancho = (ej, k) => (ej.lado && ej.lado[k] != null ? ej.lado[k] : ej.juntas && /^h[LR]$/.test(k) ? 0 : ej.juntas && /^e[LR]$/.test(k) ? ANCHO[k] / 2 : ANCHO[k]);
@@ -435,7 +436,12 @@ function vistas3D(ej) {
   ];
 }
 
-const vistasDe = (ej) => ej.pose3d ? vistas3D(ej) : ej.circulo ? vistasCirculo(ej) : ej.fin2 ? vistasAlternas(ej) : vistasSimples(ej);
+// La primera vista es la que mejor explica el ejercicio; con `primera` se elige otra ("de frente", "desde arriba inclinada").
+const vistasDe = (ej) => {
+  const vs = ej.pose3d ? vistas3D(ej) : ej.circulo ? vistasCirculo(ej) : ej.fin2 ? vistasAlternas(ej) : vistasSimples(ej);
+  const i = ej.primera ? vs.findIndex((v) => v.vista === ej.primera) : -1;
+  return i > 0 ? [vs[i], ...vs.slice(0, i), ...vs.slice(i + 1)] : vs;
+};
 
 const seg = (n) => (n >= 60 ? (n % 60 ? `${Math.floor(n / 60)} min ${n % 60} s` : `${n / 60} min`) : `${n} s`);
 

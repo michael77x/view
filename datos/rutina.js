@@ -106,6 +106,7 @@ window.RUTINA = {
       fin: { h: [38, 138], n: [52, 141], p: [92, 122], kL: [122, 112], fL: [134, 147], kR: [124, 114], fR: [136, 147], eL: [64, 146], hL: [80, 147], eR: [71, 128], hR: [90, 114] },
     },
     press_hombro: {
+      primera: "de frente", // de lado se ve un solo brazo; de frente, los dos subiendo
       nombre: "Press de hombros sentado", musculos: "Hombros y tríceps", reps: "12–15", peso: "5 kg → 7,5 kg", kg: 7.5,
       pasos: ["Siéntate en el banco con la espalda recta.", "Mancuernas a la altura de los hombros.", "Empuja hacia arriba sin bloquear los codos y baja controlado."],
       respira: "Exhala al empujar. Nunca aguantes el aire con los brazos arriba.", cuidado: "No arquees la espalda; aprieta un poco el abdomen.",
@@ -149,6 +150,7 @@ window.RUTINA = {
       fin: { h: [98, 55], n: [98, 67], p: [98, 115], kL: [127, 117], fL: [125, 150], kR: [92, 143], fR: [70, 148], eL: [98, 91], hL: [98, 113], eR: [99, 91], hR: [99, 113] },
     },
     curl: {
+      primera: "desde arriba inclinada", // se ven las dos mancuernas subiendo
       nombre: "Curl de bíceps", musculos: "Bíceps", escalera: true, series: 4, reps: "40 · 30 · 20 · 10 por lado", peso: "3 → 5 → 7,5 → 10 kg",
       pasos: ["De pie, codos pegados al cuerpo.", "Sube las mancuernas sin mover los codos.", "Baja en 2 segundos."],
       respira: "Exhala al subir.", cuidado: "Sin balancear el cuerpo: si te balanceas, el peso es mucho.",
@@ -176,6 +178,7 @@ window.RUTINA = {
       fin: { h: [44, 124], n: [56, 132], p: [100, 142], kL: [122, 118], fL: [136, 147], kR: [130, 144], fR: [158, 146], eL: [73, 143], hL: [90, 146], eR: [74, 143], hR: [91, 146] },
     },
     encogimientos: {
+      primera: "de frente", // de lado el cuerpo se ve como un palo; de frente, los dos hombros subiendo
       // Reemplaza al sostén del granjero: con movimiento y en el sitio (15/11/2026).
       nombre: "Encogimiento de hombros", musculos: "Espalda alta, trapecios y agarre", reps: "15–20 (1 s arriba)", peso: "10 kg", kg: 10,
       pasos: ["De pie, una mancuerna de 10 kg en cada mano, a los lados del cuerpo.", "Sube los hombros hacia las orejas, sin doblar los codos.", "Aguanta 1 segundo arriba y baja despacio."],
@@ -228,6 +231,7 @@ window.RUTINA = {
       fin: { h: [100, 20], n: [100, 34], p: [100, 84], kL: [92, 112], fL: [90, 130], kR: [108, 112], fR: [110, 130], eL: [78, 40], hL: [58, 44], eR: [122, 40], hR: [142, 44] },
     },
     aperturas_invertidas: {
+      primera: "desde arriba inclinada", // se ve el tronco inclinado y los dos brazos abriéndose
       nombre: "Aperturas invertidas sentado", musculos: "Espalda alta y parte de atrás del hombro", reps: "15–20", peso: "3 kg → 5 kg", kg: 3,
       pasos: ["Sentado al borde del banco, inclina el pecho hacia los muslos con la espalda recta.", "Mancuernas colgando bajo las piernas.", "Abre los brazos hacia los lados juntando los omóplatos."],
       respira: "Exhala al abrir.", cuidado: "Peso ligero: es un músculo pequeño. Al estar sentado, la lumbar descansa.",
@@ -249,6 +253,7 @@ window.RUTINA = {
       fin: { h: [38, 136], n: [52, 140], p: [100, 140], kL: [124, 116], fL: [140, 147], kR: [126, 118], fR: [142, 147], eL: [34, 128], hL: [14, 136], eR: [35, 128], hR: [15, 136] },
     },
     curl_martillo: {
+      primera: "desde arriba inclinada", // se ven las dos mancuernas subiendo
       nombre: "Curl martillo", musculos: "Bíceps y antebrazo", escalera: true, series: 4, reps: "40 · 30 · 20 · 10 por lado", peso: "3 → 5 → 7,5 → 10 kg",
       pasos: ["De pie, mancuernas a los lados con las palmas mirándose.", "Sube sin girar la muñeca y sin mover los codos.", "Baja en 2 segundos."],
       respira: "Exhala al subir.", cuidado: "Sin balancear el cuerpo.",
@@ -270,13 +275,15 @@ window.RUTINA = {
       fin: { h: [134, 52], n: [124, 62], p: [90, 95], kL: [114, 118], fL: [118, 150], kR: [76, 123], fR: [60, 150], eL: [117, 84], hL: [111, 106], eR: [102, 70], hR: [104, 92] },
     },
     elevacion_talones: {
+      primera: "desde arriba inclinada", // se ven los dos pies con el talón subiendo y las dos mancuernas
       nombre: "Elevación de talones", musculos: "Pantorrillas", reps: "25–30", peso: "10 kg en cada mano", kg: 10,
       pasos: ["De pie, mancuernas a los lados.", "Sube en puntas de pie lo más alto que puedas.", "Baja despacio."],
       respira: "Respira normal.", cuidado: "Si pierdes el equilibrio, una mancuerna sola y la otra mano en la pared.",
       eje: "neutro", // agarre neutro: el mango cruza la palma y gira con el antebrazo
       props: { mancuernas: "LR" },
-      ini: { h: [100, 28], n: [100, 42], p: [100, 90], kL: [98, 120], fL: [98, 150], kR: [100, 120], fR: [100, 150], eL: [100, 66], hL: [100, 90], eR: [101, 66], hR: [101, 90] },
-      fin: { h: [100, 20], n: [100, 34], p: [100, 82], kL: [98, 112], fL: [98, 142], kR: [100, 112], fR: [100, 142], eL: [100, 58], hL: [100, 82], eR: [101, 58], hR: [101, 82] },
+      // Con pies (tL/tR = punta): la punta queda en el suelo y sube el talón.
+      ini: { h: [100, 28], n: [100, 42], p: [100, 90], kL: [98, 120], fL: [98, 147], tL: [110, 150], kR: [100, 120], fR: [100, 147], tR: [112, 150], eL: [100, 66], hL: [100, 90], eR: [101, 66], hR: [101, 90] },
+      fin: { h: [103, 22], n: [103, 36], p: [103, 84], kL: [101, 114], fL: [101, 141], tL: [110, 150], kR: [103, 114], fR: [103, 141], tR: [112, 150], eL: [103, 60], hL: [103, 84], eR: [104, 60], hR: [104, 84] },
     },
     bulgara: {
       cinturon: true, nombre: "Sentadilla búlgara", musculos: "Piernas y glúteos", reps: "12 por pierna", peso: "5 kg → 7,5 kg", kg: 5,
