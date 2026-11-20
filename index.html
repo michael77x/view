@@ -192,7 +192,7 @@ function ejeEnPantalla(src, vec) {
   if (pr.oblicua) { const a = proyectar([X, Y, Z]), o = proyectar([0, 0, 0]); return [a[0] - o[0], a[1] - o[1]]; }
   if (pr.arriba) return [Z, X];   // desde arriba, cuerpo vertical (cabeza arriba)
   if (pr.arribaH) return [X, Z];  // desde arriba, cuerpo horizontal
-  if (src.vista === "de frente") return [Z, -Y];
+  if (src.vista === "de frente" || src.vista === "desde la cabeza") return [Z, -Y];
   return [X, -Y];                 // de lado
 }
 const mezcla = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
@@ -244,7 +244,8 @@ function pintar(f, t, vuelta = 0) {
   f.caderas.setAttribute("points", ancho3d ? pts("qL", "p", "qR") : "");
   f.head.setAttribute("cx", P.h[0]); f.head.setAttribute("cy", P.h[1]);
   for (const d of f.dbs) {
-    const h = P["h" + d.lado];
+    // "M": una mancuerna sujeta por los dos extremos (pullover): va entre las dos manos.
+    const h = d.lado === "M" ? [(P.hL[0] + P.hR[0]) / 2, (P.hL[1] + P.hR[1]) / 2] : P["h" + d.lado];
     d.g.setAttribute("transform", `translate(${h[0]},${h[1]})`);
     if (!d.neutro) continue;
     // Agarre neutro: el mango cruza la palma, perpendicular al antebrazo, y gira con él (muñeca firme).
@@ -435,10 +436,21 @@ function vistas3D(ej) {
     vista3D(ej, t3, "desde arriba inclinada", PROY.inclinada, { oblicua: { tapete: true } }),
   ];
 }
+// Acostado de lado (sobre el lado izquierdo): la postura `deLado` se escribe como si estuviera de pie
+// ([X adelante, Y alto, Z derecha]) y se gira al suelo: la cabeza va hacia la derecha y el lado derecho queda arriba.
+const alSuelo = (pose) => Object.fromEntries(Object.entries(conAncho(pose)).map(([k, [X, Y, Z]]) => [k, [Y - 60, Z + 16, X]]));
+function vistasDeLado(ej) {
+  const t3 = { ini: alSuelo(ej.deLado.ini), fin: alSuelo(ej.deLado.fin) }, m = (ej.props || {}).mancuernas;
+  return [
+    vista3D(ej, t3, "desde arriba inclinada", PROY.inclinada, { mancuernas: m, oblicua: { tapete: true } }),
+    vista3D(ej, t3, "de lado", PROY.lado, { mancuernas: m, tapete: true }),
+    vista3D(ej, t3, "desde la cabeza", PROY.frente, { mancuernas: m, tapete: true }),
+  ];
+}
 
 // La primera vista es la que mejor explica el ejercicio; con `primera` se elige otra ("de frente", "desde arriba inclinada").
 const vistasDe = (ej) => {
-  const vs = ej.pose3d ? vistas3D(ej) : ej.circulo ? vistasCirculo(ej) : ej.fin2 ? vistasAlternas(ej) : vistasSimples(ej);
+  const vs = ej.deLado ? vistasDeLado(ej) : ej.pose3d ? vistas3D(ej) : ej.circulo ? vistasCirculo(ej) : ej.fin2 ? vistasAlternas(ej) : vistasSimples(ej);
   const i = ej.primera ? vs.findIndex((v) => v.vista === ej.primera) : -1;
   return i > 0 ? [vs[i], ...vs.slice(0, i), ...vs.slice(i + 1)] : vs;
 };

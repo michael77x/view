@@ -55,13 +55,13 @@ window.RUTINA = {
     E1: { nombre: "Empuje 1", corto: "Empuje", musculos: "Pecho, hombros y tríceps",
       ejercicios: ["press_suelo", "press_hombro", "elevacion_lateral", "extension_triceps", "dead_bug"] },
     T1: { nombre: "Tirón 1", corto: "Tirón", musculos: "Espalda y bíceps",
-      ejercicios: ["remo", "aperturas_invertidas", "pullover", "curl", "bird_dog"] },
+      ejercicios: ["remo", "aperturas_de_lado", "pullover", "curl", "bird_dog"] },
     P1: { nombre: "Piernas 1", corto: "Piernas", musculos: "Piernas, glúteos y núcleo",
       ejercicios: ["sentadilla_banco", "peso_muerto_rumano", "zancada", "elevacion_talones", "curl_up"] },
     E2: { nombre: "Empuje 2", corto: "Empuje", musculos: "Pecho, hombros y tríceps",
       ejercicios: ["aperturas_suelo", "press_suelo", "elevacion_lateral", "patada_triceps", "curl_up"] },
     T2: { nombre: "Tirón 2", corto: "Tirón", musculos: "Espalda y bíceps",
-      ejercicios: ["remo_zancada", "pullover", "aperturas_invertidas", "curl_martillo", "bird_dog", "rueda"] },
+      ejercicios: ["remo_zancada", "pullover", "aperturas_de_lado", "curl_martillo", "bird_dog", "rueda"] },
     P2: { nombre: "Piernas 2", corto: "Piernas", musculos: "Piernas, glúteos y núcleo",
       ejercicios: ["bulgara", "peso_muerto_rumano", "puente", "encogimientos", "dead_bug"] },
   },
@@ -230,25 +230,31 @@ window.RUTINA = {
       ini: { h: [100, 20], n: [100, 34], p: [100, 84], kL: [92, 112], fL: [90, 130], kR: [108, 112], fR: [110, 130], eL: [88, 42], hL: [96, 48], eR: [112, 42], hR: [104, 48] },
       fin: { h: [100, 20], n: [100, 34], p: [100, 84], kL: [92, 112], fL: [90, 130], kR: [108, 112], fR: [110, 130], eL: [78, 40], hL: [58, 44], eR: [122, 40], hR: [142, 44] },
     },
-    aperturas_invertidas: {
-      primera: "desde arriba inclinada", // se ve el tronco inclinado y los dos brazos abriéndose
-      nombre: "Aperturas invertidas sentado", musculos: "Espalda alta y parte de atrás del hombro", reps: "15–20", peso: "3 kg → 5 kg", kg: 3,
-      pasos: ["Sentado al borde del banco, inclina el pecho hacia los muslos con la espalda recta.", "Mancuernas colgando bajo las piernas.", "Abre los brazos hacia los lados juntando los omóplatos."],
-      respira: "Exhala al abrir.", cuidado: "Peso ligero: es un músculo pequeño. Al estar sentado, la lumbar descansa.",
-      eje: "X", // barra de adelante hacia atrás (palmas mirándose o hacia abajo)
-      props: { banco: [74, 32], mancuernas: "LR" },
-      otra: { vista: "de frente", props: { banco: [84, 32], mancuernas: "LR" },
-        ini: { h: [100, 74], n: [100, 82], p: [100, 110], kL: [90, 110], fL: [90, 150], kR: [110, 110], fR: [110, 150], eL: [92, 104], hL: [90, 126], eR: [108, 104], hR: [110, 126] },
-        fin: { h: [100, 74], n: [100, 82], p: [100, 110], kL: [90, 110], fL: [90, 150], kR: [110, 110], fR: [110, 150], eL: [78, 88], hL: [58, 84], eR: [122, 88], hR: [142, 84] } },
-      ini: { h: [130, 74], n: [120, 82], p: [90, 110], kL: [118, 110], fL: [118, 150], kR: [120, 111], fR: [120, 150], eL: [120, 104], hL: [122, 126], eR: [122, 104], hR: [124, 126] },
-      fin: { h: [130, 74], n: [120, 82], p: [90, 110], kL: [118, 110], fL: [118, 150], kR: [120, 111], fR: [120, 150], eL: [114, 69], hL: [107, 56], eR: [115, 69], hR: [108, 56] },
+    aperturas_de_lado: {
+      // Reemplaza a las aperturas invertidas sentado: inclinado sobre los muslos le molestó la columna (19/11/2026).
+      // Acostado de lado la espalda baja no carga nada. La figura usa deLado (postura escrita de pie, ver FIGURAS.md).
+      nombre: "Aperturas acostado de lado", musculos: "Parte de atrás del hombro y espalda alta", reps: "15–20 por lado", peso: "3 kg → 5 kg", kg: 3,
+      pasos: ["Acuéstate de lado en la alfombra, rodillas dobladas, la cabeza apoyada en el brazo de abajo.", "La mancuerna en la mano de arriba, frente al pecho, con el codo un poco doblado.", "Sube el brazo hacia el techo juntando el omóplato y baja despacio. Luego, del otro lado."],
+      respira: "Exhala al subir.", cuidado: "La espalda baja no carga nada. Que el tronco no ruede hacia atrás: solo se mueve el brazo.",
+      mancuerna: "1: un lado y luego el otro",
+      eje: "X", // el mango va a lo largo del cuerpo
+      props: { tapete: true, mancuernas: "R" },
+      deLado: {
+        ini: { h: [0, 122, 0], n: [0, 108, 0], p: [0, 60, 0], kL: [16, 34, -6], fL: [2, 6, -8], kR: [18, 36, 6], fR: [4, 8, 8],
+          eL: [4, 128, -16], hL: [14, 140, -14], eR: [15, 105, 0], hR: [32, 103, -10] },
+        fin: { h: [0, 122, 0], n: [0, 108, 0], p: [0, 60, 0], kL: [16, 34, -6], fL: [2, 6, -8], kR: [18, 36, 6], fR: [4, 8, 8],
+          eL: [4, 128, -16], hL: [14, 140, -14], eR: [3, 106, 31], hR: [5, 104, 51] },
+      },
     },
     pullover: {
-      nombre: "Pullover en el suelo", musculos: "Espalda ancha y pecho", reps: "15–20", peso: "7,5 kg → 10 kg (una mancuerna)", kg: 7.5,
-      pasos: ["Acostado, rodillas dobladas, una mancuerna con las dos manos sobre el pecho.", "Llévala hacia atrás por encima de la cabeza con los codos un poco doblados.", "Vuelve a subirla sobre el pecho."],
+      primera: "desde arriba", // se ven las dos manos sujetando la mancuerna por los extremos
+      nombre: "Pullover en el suelo", musculos: "Espalda ancha y pecho", reps: "15–20", peso: "10 kg (una mancuerna)", kg: 10,
+      pasos: ["Acostado, rodillas dobladas, una mancuerna sobre el pecho sujeta por los dos extremos (una mano en cada disco).", "Llévala hacia atrás por encima de la cabeza con los codos un poco doblados.", "Vuelve a subirla sobre el pecho."],
       respira: "Inhala al bajar atrás, exhala al subir.", cuidado: "La espalda baja pegada a la alfombra; baja solo hasta donde no se despegue.",
-      mancuerna: "1, con las dos manos", juntas: true,
-      props: { tapete: true, mancuernas: "R" },
+      mancuerna: "1, con las dos manos (una en cada extremo)",
+      // Michael la sujeta por los lados (19/11/2026): una mano en cada extremo y la mancuerna atravesada entre las dos.
+      lado: { eL: -12, hL: -8, eR: 12, hR: 8 },
+      props: { tapete: true, mancuernas: "M" },
       ini: { h: [38, 136], n: [52, 140], p: [100, 140], kL: [124, 116], fL: [140, 147], kR: [126, 118], fR: [142, 147], eL: [53, 118], hL: [54, 96], eR: [55, 118], hR: [56, 96] },
       fin: { h: [38, 136], n: [52, 140], p: [100, 140], kL: [124, 116], fL: [140, 147], kR: [126, 118], fR: [142, 147], eL: [34, 128], hL: [14, 136], eR: [35, 128], hR: [15, 136] },
     },
