@@ -560,7 +560,8 @@ const ejerciciosDe = (dia) => R.dias[dia].ejercicios; // los de fases futuras sa
 const ORDEN = Object.keys(R.dias);
 // La página no guarda nada: el último entrenamiento sale de datos/registro.js (sesiones), que anota Claude.
 const ultimoDia = () => !D ? null : [...D.sesiones].reverse().find((x) => ORDEN.includes(x.dia)) || null; // { fecha, dia, ... }
-const siguiente = () => { const u = ultimoDia(); return u && ORDEN.includes(u.dia) ? ORDEN[(ORDEN.indexOf(u.dia) + 1) % ORDEN.length] : ORDEN[0]; };
+// Sin registro (copia del celular) no se sabe cuál toca: sin punto azul ni «Te toca» (20/11/2026).
+const siguiente = () => { if (!D) return null; const u = ultimoDia(); return u && ORDEN.includes(u.dia) ? ORDEN[(ORDEN.indexOf(u.dia) + 1) % ORDEN.length] : ORDEN[0]; };
 
 function rutinaDia(sec, dia) {
   const d = R.dias[dia], u = ultimoDia(), toca = siguiente() === dia;
@@ -714,7 +715,7 @@ function mostrar(id) {
   TABS.forEach(([t]) => { $("#" + t).hidden = t !== id; $("#tab-" + t).setAttribute("aria-selected", t === id); });
 }
 function renderTodo() {
-  $("#estado").textContent = `Semana ${semana} · ${fase ? fase.nombre : ""} · Te toca: ${R.dias[siguiente()].nombre}`;
+  $("#estado").textContent = `Semana ${semana} · ${fase ? fase.nombre : ""}` + (siguiente() ? ` · Te toca: ${R.dias[siguiente()].nombre}` : "");
   figuras.length = 0;
   const s = siguiente();
   ORDEN.forEach((k) => {
@@ -728,7 +729,7 @@ function renderTodo() {
 
 renderTodo();
 if (D) renderRegistro();
-mostrar(D ? "registro" : siguiente());
+mostrar(D ? "registro" : "calenta");
 if (quieto) figuras.forEach((f) => pintar(f, 1)); else requestAnimationFrame(animar);
 </script>
 </body>

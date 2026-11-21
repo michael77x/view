@@ -68,7 +68,7 @@ window.RUTINA = {
 
   ejercicios: {
     sentadilla_banco: {
-      cinturon: true, nombre: "Sentadilla goblet", musculos: "Piernas y glúteos", reps: "15–20", peso: "10 kg al pecho (empieza con 7,5 kg)", kg: 7.5,
+      cinturon: true, nombre: "Sentadilla goblet", musculos: "Piernas y glúteos", reps: "15–20", peso: "10 kg al pecho", kg: 10,
       pasos: ["De pie, pies al ancho de hombros, la mancuerna sujeta con las dos manos contra el pecho.", "Lleva la cadera atrás y abajo, despacio, hasta donde la espalda siga recta.", "Empuja el suelo y sube."],
       respira: "Inhala al bajar, exhala al subir.", cuidado: "Pecho arriba, espalda recta. Las rodillas siguen la dirección de los pies.",
       mancuerna: "1, con las dos manos al pecho", juntas: true,
@@ -134,11 +134,12 @@ window.RUTINA = {
     },
     peso_muerto_rumano: {
       cinturon: true, nombre: "Peso muerto rumano", musculos: "Isquiotibiales, glúteos y espalda", reps: "15", peso: "10 kg", kg: 10,
-      pasos: ["De pie, mancuernas frente a los muslos, rodillas un poco dobladas.", "Lleva la cadera atrás deslizando las mancuernas por las piernas.", "Baja hasta media canilla y sube apretando glúteos."],
-      respira: "Inhala al bajar, exhala al subir.", cuidado: "Espalda recta siempre. Si sientes la lumbar en vez de la parte de atrás del muslo, baja menos.",
+      pasos: ["De pie, mancuernas frente a los muslos, rodillas un poco dobladas (nunca rectas).", "Lleva la cadera atrás deslizando las mancuernas por las piernas; al bajar, las rodillas se doblan un poco más.", "Baja solo hasta donde la espalda siga recta (más o menos debajo de las rodillas) y sube apretando glúteos."],
+      respira: "Inhala al bajar, exhala al subir.", cuidado: "Por tu lumbar: espalda recta y rodillas dobladas todo el tiempo. Si sientes la lumbar en vez de la parte de atrás del muslo, baja menos.",
       props: { mancuernas: "LR" },
-      ini: { h: [100, 28], n: [100, 42], p: [100, 90], kL: [98, 120], fL: [98, 150], kR: [100, 120], fR: [100, 150], eL: [100, 66], hL: [102, 90], eR: [102, 66], hR: [104, 90] },
-      fin: { h: [141, 60], n: [130, 66], p: [88, 88], kL: [94, 119], fL: [98, 150], kR: [96, 119], fR: [100, 150], eL: [130, 90], hL: [130, 112], eR: [132, 90], hR: [132, 112] },
+      // Rodillas dobladas a la vista en todo el movimiento (Michael, 20/11/2026: con las piernas rectas carga la lumbar).
+      ini: { h: [100, 28], n: [100, 42], p: [99, 91], kL: [103, 120], fL: [98, 150], kR: [105, 120], fR: [100, 150], eL: [101, 66], hL: [103, 90], eR: [103, 66], hR: [105, 90] },
+      fin: { h: [140, 62], n: [128, 69], p: [86, 93], kL: [100, 121], fL: [98, 150], kR: [102, 121], fR: [100, 150], eL: [128, 93], hL: [127, 117], eR: [130, 93], hR: [129, 117] },
     },
     zancada: {
       cinturon: true, nombre: "Zancada estática", musculos: "Piernas y glúteos", reps: "12 por pierna", peso: "7,5 kg → 10 kg", kg: 7.5,
