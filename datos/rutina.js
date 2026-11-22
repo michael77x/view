@@ -220,7 +220,7 @@ window.RUTINA = {
       fin: { h: [127, 72], n: [116, 80], p: [72, 94], kL: [84, 122], fL: [86, 150], kR: [62, 122], fR: [54, 150], eL: [119, 97], hL: [122, 114], eR: [96, 84], hR: [74, 90] },
     },
     aperturas_suelo: {
-      nombre: "Aperturas en el suelo", musculos: "Pecho", reps: "15–20", peso: "5 kg → 7,5 kg", kg: 5,
+      nombre: "Aperturas en el suelo", musculos: "Pecho", reps: "15–20", peso: "7,5 kg", kg: 7.5,
       pasos: ["Acostado en la alfombra, rodillas dobladas, mancuernas juntas sobre el pecho.", "Abre los brazos hacia los lados con los codos un poco doblados.", "Baja hasta que los codos toquen el suelo y vuelve a juntar."],
       respira: "Inhala al abrir, exhala al cerrar.", cuidado: "El suelo frena el recorrido y cuida el hombro.",
       eje: "X", // barra de adelante hacia atrás (palmas mirándose o hacia abajo)
@@ -293,7 +293,7 @@ window.RUTINA = {
       fin: { h: [103, 22], n: [103, 36], p: [103, 84], kL: [101, 114], fL: [101, 141], tL: [110, 150], kR: [103, 114], fR: [103, 141], tR: [112, 150], eL: [103, 60], hL: [103, 84], eR: [104, 60], hR: [104, 84] },
     },
     bulgara: {
-      cinturon: true, nombre: "Sentadilla búlgara", musculos: "Piernas y glúteos", reps: "12 por pierna", peso: "5 kg → 7,5 kg", kg: 5,
+      cinturon: true, nombre: "Sentadilla búlgara", musculos: "Piernas y glúteos", reps: "12 por pierna", peso: "7,5 kg", kg: 7.5,
       pasos: ["De espaldas al banco, apoya el empeine de un pie en el asiento (no te subas).", "El otro pie bien adelante.", "Baja recto hasta que el muslo de adelante quede casi horizontal y sube."],
       respira: "Inhala al bajar, exhala al subir.", cuidado: "Banco contra la pared para que no se deslice. Tronco recto.",
       eje: "neutro", // agarre neutro: el mango cruza la palma y gira con el antebrazo
